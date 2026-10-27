@@ -1245,7 +1245,7 @@ emoji.
 > `<dossier du projet>`. Lis d'abord
 > `docs/REPRISE-DE-SESSION.md` : il contient l'historique complet, l'architecture,
 > les décisions, les bugs corrigés et l'état exact du dernier chantier.
-> Version 2.9.7, 979 vérifications qui passent en 16 suites
+> Version 2.9.8, 979 vérifications qui passent en 16 suites
 > (`for f in run-tests smoke-test background-test audit-tests units-tests
 > currency-meta-tests currency-search-tests dynamic-tests false-positive-tests
 > options-tests ocr-tests timezone-tests accessibility-tests

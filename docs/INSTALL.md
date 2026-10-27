@@ -96,11 +96,11 @@ fichier a bien été modifié sur le disque.
 
 **Cause :** Firefox garde en mémoire **plusieurs copies** de la même extension
 quand elle est chargée plusieurs fois. Il les reconnaît à leur identifiant (ici
-`uniconv@hamidaouladyoussef.local`). Le message suivant apparaît alors dans la
+`uniconv@fingersmooth.github.io`). Le message suivant apparaît alors dans la
 console du navigateur (`Cmd` + `Shift` + `J`) :
 
 ```
-Addon with ID uniconv@hamidaouladyoussef.local already installed,
+Addon with ID uniconv@fingersmooth.github.io already installed,
 older version will be disabled
 ```
 

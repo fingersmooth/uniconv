@@ -44,7 +44,7 @@ if (window.__UNICONV_CONTENT_LOADED__) {
   window.__UNICONV_CONTENT_LOADED__ = true;
 
   /** Numero de version de ce fichier, affiche dans la console au demarrage. */
-  const UNICONV_CONTENT_VERSION = '2.9.7';
+  const UNICONV_CONTENT_VERSION = '2.9.8';
 
   /**
    * Marqueur de CODE, distinct de la version du manifeste.
@@ -60,7 +60,7 @@ if (window.__UNICONV_CONTENT_LOADED__) {
    *
    * A CHANGER a chaque modification de ce fichier (une date et un mot suffisent).
    */
-  const CONTENT_BUILD_TAG = '2.9.7';
+  const CONTENT_BUILD_TAG = '2.9.8';
 
   console.log(
     `[UniConv] content.js ${UNICONV_CONTENT_VERSION} (${CONTENT_BUILD_TAG}) charge sur ${window.location.href}`

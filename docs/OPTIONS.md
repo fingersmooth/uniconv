@@ -1,6 +1,6 @@
 # UniConv — la page de réglages
 
-**Tout se règle maintenant sans toucher au code.** Version 2.9.7.
+**Tout se règle maintenant sans toucher au code.** Version 2.9.8.
 
 ---
 

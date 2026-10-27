@@ -23,7 +23,7 @@
 'use strict';
 
 /** Version de l'extension, affichee dans le popup. */
-const UNICONV_VERSION = '2.9.7';
+const UNICONV_VERSION = '2.9.8';
 
 /** Delai maximum d'attente d'une reponse de l'arriere-plan, en millisecondes. */
 const MESSAGE_TIMEOUT_MS = 7000;

@@ -1,6 +1,6 @@
 # Politique de confidentialité — UniConv
 
-**Dernière mise à jour : 24 octobre 2026. Version 2.9.7.**
+**Dernière mise à jour : 24 octobre 2026. Version 2.9.8.**
 
 ## En résumé
 
