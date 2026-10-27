@@ -1,0 +1,78 @@
+{
+  "manifest_version": 3,
+  "name": "UniConv",
+  "version": "2.9.7",
+  "description": "Affiche la valeur convertie des montants en devises et des unites de mesure, au survol, directement dans la page.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "uniconv@hamidaouladyoussef.local",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://api.exchangerate-api.com/v4/latest/*",
+    "https://api.frankfurter.dev/v1/*",
+    "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api/*",
+    "https://latest.currency-api.pages.dev/v1/currencies/*",
+    "https://open.er-api.com/v6/latest/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; base-uri 'none'; form-action 'none'"
+  },
+  "commands": {
+    "scan-page": {
+      "description": "Lancer le Scan (OCR) de la page"
+    },
+    "open-converter": {
+      "description": "Ouvrir le convertisseur UniConv"
+    }
+  },
+  "background": {
+    "scripts": [
+      "src/background.js"
+    ],
+    "service_worker": "src/background.js"
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "UniConv",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

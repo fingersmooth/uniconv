@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>UniConv — Tutoriel</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #5b6475;
+      --line: #e2e8f0;
+      --accent: #2f6bff;
+      --accent-soft: #eef3ff;
+      --ok: #1a7f37;
+      --card: #ffffff;
+      --bg: #f6f8fc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 40px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    header.hero {
+      padding: 30px 32px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: #ffffff;
+    }
+    header.hero h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: -0.02em; }
+    header.hero p { margin: 0; max-width: 720px; color: #dbeafe; font-size: 15px; }
+    .badge {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0 0; }
+    .step { padding: 12px 14px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); }
+    .step strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .step span { color: #dbeafe; font-size: 12.5px; }
+    h2 { margin: 34px 0 10px; font-size: 20px; letter-spacing: -0.01em; }
+    h3 { margin: 0 0 4px; font-size: 15px; }
+    p { margin: 0 0 10px; }
+    .muted { color: var(--muted); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .card ul { margin: 6px 0 0; padding-left: 20px; }
+    .card li { margin: 3px 0; }
+    .demo {
+      margin: 10px 0 0;
+      padding: 14px;
+      border: 1px dashed #c7d2fe;
+      border-radius: 10px;
+      background: #f8faff;
+      font-size: 14px;
+    }
+    .demo .bubble {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18);
+      font-size: 13px;
+    }
+    .demo .bubble strong { display: block; font-size: 16px; }
+    .demo .bubble span { color: #cbd5e1; font-size: 11.5px; }
+    .kbd {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: #ffffff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+    }
+    .note {
+      padding: 10px 12px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      font-size: 13px;
+      border-radius: 0 8px 8px 0;
+    }
+    .ok { border-left-color: var(--ok); background: #f0fdf4; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0; }
+    button {
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent);
+      color: #ffffff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary { background: #ffffff; color: var(--accent); }
+    button:hover { filter: brightness(0.97); }
+    button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+    footer { margin-top: 28px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 720px) {
+      .steps, .grid { grid-template-columns: 1fr; }
+      body { padding: 20px 12px 60px; }
+    }
+  </style>
+  <link rel="stylesheet" href="pixel-theme.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="badge">Bienvenue</span>
+    <h1>UniConv — votre convertisseur discret</h1>
+    <p>
+      UniConv lit les montants, les unités de mesure et les heures avec fuseau
+      directement sur les pages web. Survolez, cliquez, ou utilisez le
+      convertisseur du popup. Voici tout ce qu'il sait faire.
+    </p>
+    <div class="steps">
+      <div class="step"><strong>1. Survolez</strong><span>un prix, une unité ou une heure.</span></div>
+      <div class="step"><strong>2. Cliquez</strong><span>pour figer la bulle et choisir la cible.</span></div>
+      <div class="step"><strong>3. Ou utilisez le popup</strong><span>pour convertir au clavier.</span></div>
+    </div>
+  </header>
+
+  <h2>1. Les devises</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Survoler un montant</h3>
+      <p class="muted">
+        La bulle affiche la conversion dans votre <strong>devise de référence</strong>
+        (réglable dans le cadre « Unités de référence » du popup) et le taux
+        appliqué. Une somme déjà dans cette devise n'est pas soulignée.
+      </p>
+      <div class="demo">
+        Prix : <strong>1 234,56 €</strong>
+        <div class="bubble"><strong>1 234,56 € = 1 315,20 $</strong><span>1 EUR = 1,0653 USD</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cliquer pour choisir</h3>
+      <p class="muted">
+        Un clic fige la bulle et ouvre le menu des devises : recherche,
+        drapeaux, épinglage. Vous pouvez changer la <strong>devise de
+        départ</strong> (utile pour le ¥ ambigu) et la devise cible ; la
+        cible choisie ne devient pas la devise par défaut.
+      </p>
+      <div class="demo">
+        <strong>2 000 – 3 000 CNY</strong> /Day
+        <div class="bubble"><strong>2 000 – 3 000 CNY = 254 – 381 €</strong><span>1 CNY = 0,1270 EUR</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>2. Les unités de mesure</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Longueur, poids, volume, vitesse, température</h3>
+      <ul>
+        <li><strong>6 ft 2 in</strong> → 1,88 m</li>
+        <li><strong>180 lb</strong> → 81,65 kg</li>
+        <li><strong>2 quarts</strong> → 1,89 L</li>
+        <li><strong>60 mph</strong> → 96,56 km/h</li>
+        <li><strong>68 °F</strong> → 20 °C</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Toutes les écritures</h3>
+      <p class="muted">
+        Mots pleins, abréviations, majuscules, fractions, fourchettes :
+      </p>
+      <ul>
+        <li><strong>5 kilogrammes</strong>, <strong>2.1 QT</strong>, <strong>1/2 cup</strong></li>
+        <li><strong>300 K</strong> → 26,85 °C</li>
+        <li><strong>20 degrés Celsius</strong>, <strong>20 °C</strong></li>
+        <li><strong>2 000 – 3 000 CNY</strong> (une seule fourchette)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>3. Les fuseaux horaires</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Survoler une heure avec fuseau</h3>
+      <div class="demo">
+        Réunion à <strong>14:30 CET</strong>
+        <div class="bubble"><strong>13h30 UTC</strong><span>14:30 CET · -1 h</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cliquer pour choisir la ville</h3>
+      <p class="muted">
+        Le menu affiche chaque ville avec son décalage <strong>GMT</strong> et
+        la première ligne devient « 14h30 à Paris ». Le choix vaut pour cette
+        bulle ; la bulle suivante revient au fuseau de référence.
+      </p>
+    </div>
+  </div>
+
+  <h2>4. Les unités de référence</h2>
+  <div class="card">
+    <p>
+      Le cadre <strong>Unités de référence</strong>, en haut du popup, définit
+      votre <strong>monnaie</strong>, votre <strong>fuseau horaire</strong> et
+      votre <strong>système d'unités</strong> par défaut (par exemple EUR,
+      Europe/Paris et métrique).
+    </p>
+    <ul>
+      <li>Une valeur déjà dans ces unités <strong>n'est pas soulignée</strong> :
+        pas de bulle sur un prix en euros, une distance en mètres ou l'heure de
+        Paris.</li>
+      <li>Les autres valeurs sont converties vers ces unités de référence.</li>
+      <li>Changer la cible dans une bulle est <strong>temporaire</strong> :
+        la bulle suivante revient aux unités de référence.</li>
+      <li>Dans chaque menu de devises, le <strong>📌</strong> épingle une monnaie en tête ;
+        les sections <strong>Épinglées / Principales / Autres</strong> sont
+        conservées.</li>
+      <li>Chaque devise affiche son <strong>drapeau</strong> ; les devises
+        principales (les 5 premières) sont classées par importance, pas par
+        ordre alphabétique.</li>
+    </ul>
+  </div>
+
+  <h2>4bis. Modifier la somme, fermer au scroll</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Somme éditable</h3>
+      <p>Le nombre détecté dans la bulle est un champ discret (léger fond
+        transparent). Cliquez dessus, corrigez, puis appuyez sur
+        <strong>Entrée</strong> ou cliquez ailleurs : la conversion est
+        relancée avec votre valeur.</p>
+    </div>
+    <div class="card">
+      <h3>Fermeture au scroll</h3>
+      <p>Une bulle figée disparaît dès que la page défile : sa position ne
+        serait plus exacte. Un clic ailleurs la ferme aussi.</p>
+    </div>
+  </div>
+
+  <h2>5. Le Scan (OCR) — lire dans une image</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Comment faire</h3>
+      <ol>
+        <li>Cliquez sur <strong>Scan</strong> dans le popup, ou faites un
+          <strong>clic droit → Scanner</strong> sur la page.</li>
+        <li>Dessinez un rectangle autour du texte à lire.</li>
+        <li>La bulle affiche la conversion, comme pour un texte normal.</li>
+        <li>Si la police est très décorative et que l'OCR ne lit rien,
+          l'extension lit le texte HTML présent sous la zone.</li>
+        <li><strong>Signaler un bug</strong> (clic droit) fait la même
+          sélection, puis ouvre un rapport local avec l'image, le texte et la
+          page. Copiez-le ou téléchargez l'image pour l'envoyer.</li>
+      </ol>
+      <p class="muted">
+        Le moteur tourne <strong>en local</strong> : la zone photographiée ne
+        quitte pas votre ordinateur.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Désactiver le Scan</h3>
+      <p class="muted">
+        Dans les réglages, décochez <strong>« Activer le Scan (OCR) »</strong> :
+        le bouton Scan et le raccourci personnel deviennent inactifs.
+      </p>
+      <p class="note ok">
+        Aucun raccourci n'est imposé : vous choisissez le vôtre (voir
+        « Raccourcis » ci-dessous), pour éviter les conflits avec Firefox.
+      </p>
+    </div>
+  </div>
+
+  <h2>6. Le convertisseur du popup (et son raccourci)</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Convertir au clavier</h3>
+      <p class="muted">
+        Cliquez sur l'icône : le popup s'ouvre avec un vrai convertisseur.
+        Choisissez <strong>Devises</strong> ou <strong>Unités</strong>, tapez
+        le montant, choisissez les deux unités, lisez le résultat.
+      </p>
+      <ul>
+        <li>100 USD → EUR</li>
+        <li>10 kg → lb</li>
+        <li>0 °C → °F</li>
+        <li>sur un ¥ ambigu : cliquer sur le signe de la devise dans le montant pour changer la devise de départ</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Un raccourci pour le convertisseur</h3>
+      <p class="muted">
+        Affectez un raccourci à « Ouvrir le convertisseur » : une petite
+        fenêtre s'ouvre avec le <strong>champ de montant déjà sélectionné</strong>.
+        Tapez la somme directement, elle est convertie.
+      </p>
+    </div>
+  </div>
+
+  <h2>7. Les réglages</h2>
+  <table>
+    <thead><tr><th>Réglage</th><th>Ce qu'il fait</th></tr></thead>
+    <tbody>
+      <tr><td>Unités de référence</td><td>Monnaie, fuseau horaire et système d'unités par défaut ; ces valeurs ne sont pas soulignées.</td></tr>
+      <tr><td>Devise cible d'une bulle</td><td>Changement temporaire, oublié à la bulle suivante.</td></tr>
+      <tr><td>Langue</td><td>Français, anglais, espagnol, russe, chinois, arabe (libellés principaux ; textes d’aide longs en cours de traduction).</td></tr>
+      <tr><td>Activer le Scan (OCR)</td><td>Coupe complètement la lecture d'écran.</td></tr>
+      <tr><td>Raccourcis</td><td>Scan et convertisseur, choisis par vous.</td></tr>
+      <tr><td>Sites exclus</td><td>Aucune bulle sur ces domaines.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8. Vos raccourcis clavier</h2>
+  <div class="card">
+    <p>
+      UniConv ne réserve <strong>aucune touche</strong> : les raccourcis sont
+      choisis par vous, dans le gestionnaire du navigateur.
+    </p>
+    <ul>
+      <li><strong>Firefox</strong> : <span class="kbd">about:addons</span> →
+        roue dentée → <em>Gérer les raccourcis de l'extension</em>.</li>
+      <li><strong>Chrome / Edge / Brave / Opera</strong> :
+        <span class="kbd">chrome://extensions/shortcuts</span>.</li>
+    </ul>
+    <p class="muted">
+      Deux commandes sont disponibles : <strong>Lancer le Scan</strong> et
+      <strong>Ouvrir le convertisseur</strong>.
+    </p>
+  </div>
+
+  <h2>9. Vie privée</h2>
+  <div class="card">
+    <p>
+      Les conversions d'unités et de fuseaux sont <strong>locales</strong>.
+      Les taux de change sont demandés à des services publics (Banque centrale
+      européenne et sources de secours) ; aucune donnée de navigation n'est
+      envoyée. Le Scan reste sur votre ordinateur.
+    </p>
+  </div>
+
+  <div class="actions">
+    <button type="button" id="open-options">Ouvrir les réglages</button>
+    <button type="button" class="secondary" id="open-converter">Ouvrir le convertisseur</button>
+    <button type="button" class="secondary" id="close-tutorial">Fermer</button>
+  </div>
+
+  <footer>
+    UniConv — tutoriel. Vous pouvez le rouvrir depuis le popup ou les réglages.
+  </footer>
+</div>
+
+<script src="i18n.js"></script>
+<script src="tutorial.js"></script>
+</body>
+</html>

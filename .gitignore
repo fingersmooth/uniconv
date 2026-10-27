@@ -1,0 +1,23 @@
+# Systèmes
+.DS_Store
+Thumbs.db
+
+# Dépendances
+node_modules/
+pnpm-lock.yaml
+
+# Artefacts de build et paquets
+dist/
+*.xpi
+*.zip
+*.crx
+*.pem
+*.key
+*.mobileconfig
+
+# Environnement / secrets
+.env
+.env.*
+
+# Divers
+*.log

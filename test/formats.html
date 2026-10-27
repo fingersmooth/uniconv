@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — test/formats.html
+  ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   C'est la page de test OFFICIELLE du projet. Elle ne bougera plus : chaque
+   iteration y ajoutera des lignes, et on verifiera qu'aucune ancienne ligne
+   n'a cesse de fonctionner (c'est ce qu'on appelle un « test de
+   non-regression »).
+
+   COMMENT S'EN SERVIR
+   -------------------
+   1. Ouvrir ce fichier dans Firefox (glisser-deposer, ou Fichier > Ouvrir).
+   2. Survoler chaque montant de la colonne « Texte ».
+   3. Attendu : une bulle bleue apparait avec la valeur convertie, et le
+      montant est souligne en pointilles.
+
+   ATTENTION : une page ouverte en « file:// » (fichier local) n'est PAS
+   analysee automatiquement par l'extension, car manifest.json ne demande
+   l'injection que sur http et https. Pour tester cette page avec l'extension,
+   il faut servir le dossier en http. La marche a suivre est dans
+   docs/TESTS.md.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>UniConv — page de test des formats</title>
+  <style>
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #111827;
+      background: #ffffff;
+    }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 17px; margin: 32px 0 8px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .intro { color: #4b5563; font-size: 14px; margin: 0 0 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+    th, td { padding: 7px 10px; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; font-weight: 600; }
+    td.num { width: 46px; color: #9ca3af; font-variant-numeric: tabular-nums; }
+    td.expect { width: 150px; color: #1a7f37; }
+    td.reason { color: #b45309; }
+    .note { padding: 10px 12px; border-left: 3px solid #2f6bff; background: #f4f7ff; font-size: 13px; }
+    .warn { padding: 10px 12px; border-left: 3px solid #d97706; background: #fffbeb; font-size: 13px; }
+    code { padding: 1px 5px; border-radius: 3px; background: #f3f4f6;
+           font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  </style>
+  <link rel="stylesheet" href="test-nav.css">
+</head>
+<body>
+<nav class="test-nav" aria-label="Pages de test">
+  <span class="test-nav-title">UniConv · tests</span>
+  <a href="formats.html" aria-current="page">Formats</a>
+  <a href="monnaies.html">Monnaies</a>
+  <a href="faux-positifs.html">Faux positifs</a>
+  <a href="dynamique.html">Dynamique</a>
+  <a href="fuseaux.html">Fuseaux</a>
+</nav>
+
+
+  <h1>UniConv — page de test des formats</h1>
+  <p class="intro">
+    Iteration 1 : detection des montants en euros et affichage d'une bulle au
+    survol. La valeur convertie est encore <strong>fictive</strong>
+    (multipliee par 1,10).
+  </p>
+
+  <p class="note">
+    <strong>Mode d'emploi :</strong> survolez le texte de la colonne
+    «&nbsp;Texte&nbsp;». Une bulle bleue doit apparaitre, et le montant doit
+    etre souligne en pointilles. Le nombre entre parentheses est la valeur
+    numerique qui doit etre lue.
+  </p>
+
+  <!-- ======================================================================
+       DONNEES DE TEST
+       Ce bloc decrit les memes cas que le tableau ci-dessous, sous une forme
+       que l'outil tools/run-tests.mjs sait lire. Il permet de verifier la
+       detection automatiquement, sans navigateur, a chaque modification du
+       code. Ne pas le supprimer.
+       ====================================================================== -->
+  <script type="application/json" id="unicorn-test-data">
+  {
+    "mustMatch": [
+      { "text": "10\u20AC",          "value": 10 },
+      { "text": "10 \u20AC",         "value": 10 },
+      { "text": "10,50 \u20AC",      "value": 10.5 },
+      { "text": "10.50 \u20AC",      "value": 10.5 },
+      { "text": "0,99 \u20AC",       "value": 0.99 },
+      { "text": "1 234 \u20AC",      "value": 1234 },
+      { "text": "1 234,56 \u20AC",   "value": 1234.56 },
+      { "text": "12\u00A0345\u00A0678 \u20AC", "value": 12345678 },
+      { "text": "10\u00A0\u20AC",    "value": 10 },
+      { "text": "10\u202F\u20AC",    "value": 10 },
+      { "text": "999 \u20AC",        "value": 999 },
+      { "text": "12345 \u20AC",      "value": 12345 },
+      { "text": "679\u20AC99",        "value": 679.99 },
+      { "text": "12\u20AC50",         "value": 12.5 },
+      { "text": "1 234\u20AC56",      "value": 1234.56 },
+      { "text": "Prix 679\u20AC99 seul", "value": 679.99 },
+      { "text": "\u20AC10",          "value": 10 },
+      { "text": "$1,234.56",          "value": 1234.56 },
+      { "text": "\u00A310",          "value": 10 },
+      { "text": "\u00A5100",         "value": 100 },
+      { "text": "10 EUR",             "value": 10 },
+      { "text": "EUR 10",             "value": 10 },
+      { "text": "100 JPY",            "value": 100 },
+      { "text": "10 CHF",             "value": 10 },
+      { "text": "CHF 1 234,56",       "value": 1234.56 },
+      { "text": "5 \u20AC",          "value": 5 },
+      { "text": "\u20AC 1 234,56",   "value": 1234.56 },
+      { "text": "10 EUR ",            "value": 10 },
+      { "text": "100 dollars",        "value": 100 },
+      { "text": "10 livres sterling", "value": 10 },
+      { "text": "5 yens",             "value": 5 },
+      { "text": "10 pounds",          "value": 10 },
+      { "text": "\u20AC12,5",        "value": 12.5 },
+      { "text": "1 234,56 USD",       "value": 1234.56 },
+      { "text": "USD 1,234.56",       "value": 1234.56 },
+      { "text": "\u00A3 5",          "value": 5 },
+      { "text": "$ 0.99",             "value": 0.99 },
+      { "text": "dix euros",          "value": 10 },
+      { "text": "vingt-cinq euros",   "value": 25 },
+      { "text": "cent euros",         "value": 100 },
+      { "text": "cent cinquante euros", "value": 150 },
+      { "text": "deux mille euros",   "value": 2000 },
+      { "text": "ten dollars",        "value": 10 },
+      { "text": "twenty-five dollars", "value": 25 },
+      { "text": "one hundred dollars", "value": 100 },
+      { "text": "two thousand dollars", "value": 2000 }
+    ],
+    "mustNotMatch": [
+      { "text": "10",                 "reason": "nombre sans devise" },
+      { "text": "version 10.0",       "reason": "numero de version" },
+      { "text": "v1.2.3",             "reason": "numero de version" },
+      { "text": "10\u20AC5",         "reason": "symbole colle a un chiffre" },
+      { "text": "10\u20ACabc",       "reason": "symbole colle a des lettres" },
+      { "text": "abc10\u20AC",       "reason": "lettres collees devant" },
+      { "text": "0 \u20AC",          "reason": "montant nul" },
+      { "text": "2026-10-14",         "reason": "date" },
+      { "text": "10 pommes",          "reason": "nombre et mot sans devise" },
+      { "text": "Miles Davis",        "reason": "nom propre, pas de nombre" },
+      { "text": "10 x 20",            "reason": "dimensions" },
+      { "text": "1920x1080",          "reason": "resolution" },
+      { "text": "10 %",               "reason": "pourcentage, pas de devise" },
+      { "text": "10.0.1",             "reason": "version logicielle" },
+      { "text": "10 EURabc",          "reason": "code colle a des lettres" }
+    ],
+    "mustContain": [
+      { "text": "Le prix est de 10\u20AC aujourd'hui.", "value": 10,
+        "reason": "montant au milieu d'une phrase" },
+      { "text": "De 5\u20AC a 10\u20AC seulement.",     "value": 5,
+        "reason": "borne basse d'une fourchette" },
+      { "text": "De 5\u20AC a 10\u20AC seulement.",     "value": 10,
+        "reason": "borne haute d'une fourchette" }
+    ],
+    "mustNotOverlap": [
+      { "text": "10 EUR", "reason": "le code EUR ne doit produire qu'une detection" },
+      { "text": "10 \u20AC", "reason": "le symbole ne doit produire qu'une detection" },
+      { "text": "EUR 10", "reason": "une seule detection" }
+    ]
+  }
+  </script>
+
+  <h2>1. Doivent etre detectes (tous formats)</h2>
+  <table>
+    <thead>
+      <tr><th class="num">#</th><th>Texte</th><th class="expect">Valeur attendue</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Article a 10&euro;</td><td class="expect">10</td></tr>
+      <tr><td class="num">2</td><td>Article a 10 &euro;</td><td class="expect">10</td></tr>
+      <tr><td class="num">3</td><td>Prix : 10,50 &euro;</td><td class="expect">10,50</td></tr>
+      <tr><td class="num">4</td><td>Prix : 10.50 &euro;</td><td class="expect">10,50</td></tr>
+      <tr><td class="num">5</td><td>Promo a 0,99 &euro;</td><td class="expect">0,99</td></tr>
+      <tr><td class="num">6</td><td>Loyer : 1 234 &euro;</td><td class="expect">1 234</td></tr>
+      <tr><td class="num">7</td><td>Prix : 1 234,56 &euro;</td><td class="expect">1 234,56</td></tr>
+      <tr><td class="num">8</td><td>Budget : 12 345 678 &euro;</td><td class="expect">12 345 678</td></tr>
+      <tr><td class="num">9</td><td>Espace insecable : 10&nbsp;&euro;</td><td class="expect">10</td></tr>
+      <tr><td class="num">10</td><td>Espace fine : 10&#8239;&euro;</td><td class="expect">10</td></tr>
+      <tr><td class="num">11</td><td>Total : 999 &euro;</td><td class="expect">999</td></tr>
+      <tr><td class="num">12</td><td>Somme : 12345 &euro;</td><td class="expect">12 345</td></tr>
+      <tr><td class="num">13</td><td>Symbole avant : &euro;10</td><td class="expect">10</td></tr>
+      <tr><td class="num">14</td><td>Dollar americain : $1,234.56</td><td class="expect">1 234,56</td></tr>
+      <tr><td class="num">15</td><td>Livre : &pound;10</td><td class="expect">10</td></tr>
+      <tr><td class="num">16</td><td>Yen : &yen;100</td><td class="expect">100</td></tr>
+      <tr><td class="num">17</td><td>Code apres : 10 EUR</td><td class="expect">10</td></tr>
+      <tr><td class="num">18</td><td>Code avant : EUR 10</td><td class="expect">10</td></tr>
+      <tr><td class="num">19</td><td>Yen japonais : 100 JPY</td><td class="expect">100</td></tr>
+      <tr><td class="num">20</td><td>Franc suisse : 10 CHF</td><td class="expect">10</td></tr>
+      <tr><td class="num">21</td><td>Suisse : CHF 1 234,56</td><td class="expect">1 234,56</td></tr>
+      <tr><td class="num">22</td><td>Mots : 100 dollars</td><td class="expect">100</td></tr>
+      <tr><td class="num">23</td><td>Mots : 10 livres sterling</td><td class="expect">10</td></tr>
+      <tr><td class="num">24</td><td>Mots : 5 yens</td><td class="expect">5</td></tr>
+      <tr><td class="num">25</td><td>Mots anglais : 10 pounds</td><td class="expect">10</td></tr>
+      <tr><td class="num">26</td><td>USD apres : 1 234,56 USD</td><td class="expect">1 234,56</td></tr>
+      <tr><td class="num">27</td><td>USD avant : USD 1,234.56</td><td class="expect">1 234,56</td></tr>
+      <tr><td class="num">28</td><td>Dollar espace : $ 0.99</td><td class="expect">0,99</td></tr>
+      <tr><td class="num">29</td><td>En lettres : dix euros</td><td class="expect">10</td></tr>
+      <tr><td class="num">30</td><td>En lettres : vingt-cinq euros</td><td class="expect">25</td></tr>
+      <tr><td class="num">31</td><td>En lettres : cent euros</td><td class="expect">100</td></tr>
+      <tr><td class="num">32</td><td>En lettres : cent cinquante euros</td><td class="expect">150</td></tr>
+      <tr><td class="num">33</td><td>En lettres : deux mille euros</td><td class="expect">2 000</td></tr>
+      <tr><td class="num">34</td><td>En lettres : ten dollars</td><td class="expect">10</td></tr>
+      <tr><td class="num">35</td><td>En lettres : twenty-five dollars</td><td class="expect">25</td></tr>
+      <tr><td class="num">36</td><td>En lettres : one hundred dollars</td><td class="expect">100</td></tr>
+      <tr><td class="num">37</td><td>En lettres : two thousand dollars</td><td class="expect">2 000</td></tr>
+      <tr><td class="num">38</td><td>Symbole entre euros et centimes : 679&euro;99</td><td class="expect">679,99</td></tr>
+      <tr><td class="num">39</td><td>Sans espace : 12&euro;50</td><td class="expect">12,50</td></tr>
+      <tr><td class="num">40</td><td>Avec milliers : 1 234&euro;56</td><td class="expect">1 234,56</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Ne doivent PAS etre detectes</h2>
+  <p class="intro">
+    Ces lignes contiennent des chiffres, mais aucun montant en euros. Si une
+    bulle apparait sur l'une d'elles, c'est un <strong>faux positif</strong> :
+    signalez-moi son numero.
+  </p>
+  <table>
+    <thead>
+      <tr><th class="num">#</th><th>Texte</th><th class="reason">Pourquoi c'est un piege</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Le modele 10 est disponible.</td><td class="reason">nombre sans devise</td></tr>
+      <tr><td class="num">2</td><td>Version 10.0 disponible.</td><td class="reason">numero de version</td></tr>
+      <tr><td class="num">3</td><td>Mise a jour v1.2.3 publiee.</td><td class="reason">numero de version</td></tr>
+      <tr><td class="num">4</td><td>Reference 10&euro;5 dans le catalogue.</td><td class="reason">symbole € suivi d'un chiffre</td></tr>
+      <tr><td class="num">5</td><td>Code 10&euro;abc en stock.</td><td class="reason">symbole € suivi de lettres</td></tr>
+      <tr><td class="num">6</td><td>Identifiant abc10&euro; enregistre.</td><td class="reason">lettres collees devant le chiffre</td></tr>
+      <tr><td class="num">7</td><td>Solde : 0 &euro;</td><td class="reason">montant nul</td></tr>
+      <tr><td class="num">8</td><td>Date du 2026-10-14.</td><td class="reason">date</td></tr>
+      <tr><td class="num">9</td><td>Le trompettiste Miles Davis.</td><td class="reason">nom propre, pas un montant</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Cas particuliers</h2>
+  <table>
+    <thead>
+      <tr><th class="num">#</th><th>Texte</th><th class="expect">Attendu</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Le prix est de 10&euro; aujourd'hui.</td><td class="expect">10 detecte</td></tr>
+      <tr><td class="num">2</td><td>De 5&euro; a 10&euro; seulement.</td><td class="expect">5 ET 10 detectes</td></tr>
+      <tr><td class="num">3</td><td>Ce texte ne contient aucun montant.</td><td class="expect">rien du tout</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Unites de mesure (iteration 5)</h2>
+  <p class="intro">
+    Les unites sont converties LOCALEMENT (aucun appel reseau). Cliquez sur une
+    unite pour ouvrir le menu et choisir l'unite cible. Le systeme par defaut
+    (metrique ou imperial) se choisit dans le popup de l'extension.
+  </p>
+  <table>
+    <thead>
+      <tr><th class="num">#</th><th>Texte</th><th class="expect">Conversion attendue (vers metrique)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Distance : 5 km</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">2</td><td>Distance : 3 miles</td><td class="expect">4,83 km</td></tr>
+      <tr><td class="num">3</td><td>Poids : 10 lbs</td><td class="expect">4,54 kg</td></tr>
+      <tr><td class="num">4</td><td>Poids : 2,5 kg</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">5</td><td>Temperature : 70&deg;F</td><td class="expect">21,11 &deg;C</td></tr>
+      <tr><td class="num">6</td><td>Temperature : 20&deg;C</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">7</td><td>Taille : 1m80</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">8</td><td>Taille : 6 ft 2 in</td><td class="expect">1,88 m</td></tr>
+      <tr><td class="num">9</td><td>Vitesse : 60 mph</td><td class="expect">96,56 km/h</td></tr>
+      <tr><td class="num">10</td><td>Volume : 10 gal</td><td class="expect">37,85 L</td></tr>
+
+      <tr><td class="num">11</td><td>Petite long. : 5 mm</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">12</td><td>Long. moyenne : 10 cm</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">13</td><td>Grande long. : 2 m</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">14</td><td>Anglais : 5 yd</td><td class="expect">4,57 m</td></tr>
+      <tr><td class="num">15</td><td>Anglais : 10 in</td><td class="expect">0,25 m</td></tr>
+      <tr><td class="num">16</td><td>Anglais : 6 ft</td><td class="expect">1,83 m</td></tr>
+      <tr><td class="num">17</td><td>Anglais : 5'10"</td><td class="expect">1,78 m</td></tr>
+
+      <tr><td class="num">18</td><td>Petit poids : 500 g</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">19</td><td>Poids : 5 oz</td><td class="expect">141,75 g</td></tr>
+      <tr><td class="num">20</td><td>Poids : 12 st</td><td class="expect">76,2 kg</td></tr>
+
+      <tr><td class="num">21</td><td>Petit volume : 250 ml</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">22</td><td>Volume : 5 L</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">23</td><td>Volume : 2 pt</td><td class="expect">946,35 ml</td></tr>
+      <tr><td class="num">24</td><td>Volume : 1 cup</td><td class="expect">236,59 ml</td></tr>
+      <tr><td class="num">25</td><td>Volume : 2 quarts</td><td class="expect">1,89 L</td></tr>
+      <tr><td class="num">26</td><td>Volume : 1 qt</td><td class="expect">946,35 ml</td></tr>
+      <tr><td class="num">27</td><td>Piège : 3 quarts de la surface</td><td class="expect">aucune conversion (fraction)</td></tr>
+      <tr><td class="num">28</td><td>Masse : 2 tonnes</td><td class="expect">2000 kg</td></tr>
+      <tr><td class="num">29</td><td>Masse : 500 mg</td><td class="expect">0,5 g</td></tr>
+      <tr><td class="num">30</td><td>Volume : 25 cl</td><td class="expect">250 ml</td></tr>
+      <tr><td class="num">31</td><td>Volume : 1/2 cup</td><td class="expect">118,29 ml</td></tr>
+      <tr><td class="num">32</td><td>Volume : 1 fl oz</td><td class="expect">29,57 ml</td></tr>
+      <tr><td class="num">33</td><td>Vitesse : 20 nœuds</td><td class="expect">37,04 km/h</td></tr>
+      <tr><td class="num">34</td><td>Température : 300 K</td><td class="expect">26,85 °C</td></tr>
+      <tr><td class="num">35</td><td>Température : 20 degrés Celsius</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">36</td><td>Longueur : 1 mille marin</td><td class="expect">1,85 km</td></tr>
+      <tr><td class="num">37</td><td>Volume : 2 1/2 cups</td><td class="expect">591,47 ml</td></tr>
+
+      <tr><td class="num">25</td><td>Vitesse : 100 km/h</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">26</td><td>Temperature : 300 K</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">27</td><td>Temperature : 0 &deg;C</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">28</td><td>Collé : 5km</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">29</td><td>Collé : 2,5kg</td><td class="expect">deja en metrique</td></tr>
+      <tr><td class="num">30</td><td>Phrase : il a couru 10 miles</td><td class="expect">16,09 km</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. Fourchettes de prix (iteration 19)</h2>
+  <p class="intro">
+    Une fourchette est <strong>UNE</strong> detection : elle s'affiche
+    «&nbsp;2 000 &ndash; 3 000 CNY = ...&nbsp;» et se convertit avec un seul
+    taux. Tous les separateurs courants sont acceptes.
+  </p>
+  <table>
+    <thead>
+      <tr><th class="num">#</th><th>Texte</th><th class="expect">Fourchette attendue</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Salary Range : 2000 - 3000 CNY /Day</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">2</td><td>2000-3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">3</td><td>2000&ndash;3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">4</td><td>2000 &mdash; 3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">5</td><td>2000/3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">6</td><td>2000 ~ 3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">7</td><td>2000 to 3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">8</td><td>de 2000 &agrave; 3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">9</td><td>entre 2000 et 3000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">10</td><td>CNY 2000 - 3000</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">11</td><td>2 000 &ndash; 3 000 CNY</td><td class="expect">2 000 &ndash; 3 000 CNY</td></tr>
+      <tr><td class="num">12</td><td>&euro;200-&euro;300</td><td class="expect">200 &ndash; 300 &euro;</td></tr>
+      <tr><td class="num">13</td><td>10 EUR - 20 EUR</td><td class="expect">10 &ndash; 20 &euro;</td></tr>
+      <tr><td class="num">14</td><td>330 - 3300 USD</td><td class="expect">330 &ndash; 3300 $</td></tr>
+      <tr><td class="num">15</td><td>&euro;200-&euro;300 compensation</td><td class="expect">200 &ndash; 300 &euro;</td></tr>
+    </tbody>
+  </table>
+
+  <p class="warn">
+    <strong>Rappel :</strong> la conversion des devises (par exemple
+    <code>10 € = 11,19 USD</code>) utilise les <strong>vrais taux</strong>. Elle
+    servira uniquement a verifier que la bulle s'affiche au bon endroit et avec
+    le bon texte. Les vrais taux de change arrivent a l'iteration 3.
+  </p>
+
+</body>
+</html>

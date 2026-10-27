@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — src/engine.html
+  ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   Heberger le MOTEUR OCR (Tesseract.js) dans une vraie page de l'extension.
+
+   POURQUOI UNE PAGE, ET PAS LE SCRIPT D'ARRIERE-PLAN
+   --------------------------------------------------
+   Le script d'arriere-plan de Firefox est une « page d'evenement » : elle est
+   DECHARGEE des qu'elle est inactive. Une lecture OCR dure 1 a 5 secondes ; si
+   la page est dechargee pendant ce temps, la lecture meurt sans explication.
+
+   Une page d'extension ouverte dans un onglet, elle, reste vivante aussi
+   longtemps qu'elle existe. C'est le contexte le plus sur pour ce travail.
+
+   COMMENT ELLE EST UTILISEE
+   -------------------------
+   L'arriere-plan cree cet onglet EN ARRIERE-PLAN (sans le selectionner), lui
+   envoie l'image de la zone, attend le texte, puis le renvoie a la page. Cet
+   onglet ne sert jamais d'interface : il ne fait que calculer.
+
+   Il se ferme tout seul apres quelques minutes d'inactivite, et peut aussi
+   etre ouvert a la main pour verifier que le moteur fonctionne.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>UniConv — moteur OCR</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 28px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #111827;
+      background: #f6f8fc;
+    }
+    main { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 19px; margin: 0 0 4px; }
+    .intro { color: #4b5563; font-size: 13px; margin: 0 0 16px; }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e6ee;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .status { font-weight: 600; }
+    .status.ok { color: #1a7f37; }
+    .status.busy { color: #2f6bff; }
+    .status.error { color: #b91c1c; }
+    button {
+      padding: 7px 12px;
+      border: 1px solid #2f6bff;
+      border-radius: 6px;
+      background: #eef3ff;
+      color: #2f6bff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: default; }
+    textarea {
+      width: 100%;
+      min-height: 70px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      padding: 8px;
+      border: 1px solid #e2e6ee;
+      border-radius: 6px;
+    }
+    .muted { color: #6b7280; font-size: 12.5px; }
+    code {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #eef1f6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Moteur OCR d&rsquo;UniConv</h1>
+  <p class="intro">
+    Cette page heberge le moteur de lecture. Elle est ouverte par
+    l&rsquo;extension pendant une lecture&nbsp;; vous pouvez aussi la laisser
+    ouverte pour vérifier que tout fonctionne.
+  </p>
+
+  <div class="card">
+    <div class="toolbar">
+      <button type="button" id="self-test">Tester le moteur</button>
+      <span class="status" id="status">prêt</span>
+    </div>
+    <p class="muted" id="details">
+      Le test dessine un texte connu, le fait lire, et affiche le résultat.
+    </p>
+  </div>
+
+  <div class="card">
+    <strong>Dernière zone reçue</strong>
+    <p class="muted" style="margin:4px 0 8px;">
+      C'est exactement ce que le moteur reçoit. Si cette image ne montre pas le
+      texte attendu, le problème vient de la découpe (et non du moteur).
+    </p>
+    <img id="last-zone" alt="Dernière zone reçue"
+         style="max-width:100%;height:auto;border:1px solid #e2e6ee;border-radius:6px;">
+  </div>
+
+  <div class="card">
+    <strong>Dernier texte reconnu</strong>
+    <textarea id="text-zone" spellcheck="false" readonly
+      placeholder="Aucune lecture pour l'instant."></textarea>
+    <p class="muted" id="timing"></p>
+  </div>
+
+  <p class="muted">
+    Moteur : Tesseract.js (français + anglais), embarqué dans
+    l&rsquo;extension. Aucune donnée ne quitte votre ordinateur.
+  </p>
+</main>
+
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script src="engine.js"></script>
+</body>
+</html>

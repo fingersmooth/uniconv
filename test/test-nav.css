@@ -1,0 +1,55 @@
+/* ==========================================================================
+   UniConv — navigation commune aux pages de test
+   --------------------------------------------------------------------------
+   But : passer d'une page de test a l'autre SANS revenir au projet ni a la
+   conversation. La barre est collee en haut, discrete, et ne doit jamais
+   passer devant la bulle de l'extension (z-index 2147483647) : on reste donc
+   tres bas (40).
+   ========================================================================== */
+
+.test-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 20px;
+  padding: 8px 14px;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  font: 600 13px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.test-nav-title {
+  margin-right: 10px;
+  color: #94a3b8;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.test-nav a {
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #cbd5e1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.test-nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.test-nav a:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.test-nav a[aria-current="page"] {
+  background: #2563eb;
+  color: #ffffff;
+}

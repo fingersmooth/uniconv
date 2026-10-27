@@ -1,0 +1,99 @@
+/*
+ * UniConv — surcouche visuelle 16-bit / Game Boy Advance.
+ *
+ * Contours 2 px, ombres dures, petits rayons, palette limitée. Cette feuille
+ * est chargée APRÈS le style propre à chaque page pour ne pas modifier la
+ * logique de mise en page, seulement son relief.
+ */
+:root {
+  --pixel-ink: #071018;
+  --pixel-paper: #f8fafc;
+  --pixel-blue: #1d4ed8;
+  --pixel-cyan: #7dd3fc;
+  --pixel-green: #86efac;
+  --pixel-amber: #fde68a;
+}
+
+body {
+  background-color: #f3f7ff !important;
+  font-family: "Trebuchet MS", "Segoe UI", Tahoma, Verdana, sans-serif !important;
+}
+
+.card,
+.rates-box,
+.content-box,
+.guard-box,
+.reference-box,
+.converter-pane,
+.status-bar {
+  border: 2px solid var(--pixel-ink) !important;
+  border-radius: 4px !important;
+  box-shadow: 3px 3px 0 var(--pixel-ink) !important;
+}
+
+.button,
+.ocr-header-button,
+.refresh-button,
+.gear-button,
+.reference-field,
+.converter-tab,
+.converter-swap,
+.actions button,
+.actions a.button {
+  border: 2px solid var(--pixel-ink) !important;
+  border-radius: 3px !important;
+  box-shadow: 2px 2px 0 var(--pixel-ink) !important;
+}
+
+.button:active,
+.ocr-header-button:active,
+.refresh-button:active,
+.gear-button:active,
+.reference-field:active,
+.converter-tab:active,
+.converter-swap:active,
+.actions button:active,
+.actions a.button:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: none !important;
+}
+
+.reference-menu {
+  border: 2px solid var(--pixel-ink) !important;
+  border-radius: 3px !important;
+  box-shadow: 4px 4px 0 var(--pixel-ink) !important;
+}
+
+input,
+select,
+textarea,
+.converter-input,
+.converter-select {
+  border: 2px solid var(--pixel-ink) !important;
+  border-radius: 3px !important;
+}
+
+/* Les lignes de réglage et les groupes segmentés sont des conteneurs :
+   aucun cadre noir autour d'eux. Seuls les vrais contrôles en ont un. */
+.field-control,
+.segmented {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+h1,
+h2,
+h3 {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace !important;
+  letter-spacing: 0.04em;
+}
+
+.popup-header {
+  border-bottom: 2px solid var(--pixel-ink) !important;
+}
+
+.popup-title {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase;
+}

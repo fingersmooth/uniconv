@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — src/options.html
+  ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   La page de reglages de l'extension (iteration 8). Elle s'ouvre par :
+     - le bouton « Reglages » du popup ;
+     - le bouton « Options » de about:debugging ;
+     - ou directement : about:addons > UniConv > Preferences.
+
+   PRINCIPE
+   --------
+   Tout est enregistre IMMEDIATEMENT (pas de bouton « Enregistrer ») : chaque
+   changement est ecrit dans le stockage du navigateur et s'applique tout de
+   suite a tous les onglets ouverts.
+
+   A SAVOIR
+   --------
+   Les reglages vivent dans le STOCKAGE du navigateur, pas dans les fichiers :
+   modifier un fichier du dossier ne change pas un reglage deja enregistre.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>UniConv — Réglages</title>
+  <style>
+    :root {
+      --unicolor-border: #e2e6ee;
+      --unicolor-muted: #6b7280;
+      --unicolor-accent: #2f6bff;
+      --unicolor-ok: #1a7f37;
+      --unicolor-warn: #b45309;
+      --unicolor-bg: #f6f8fc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #111827;
+      background: var(--unicolor-bg);
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header.page-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    h1 { font-size: 22px; margin: 0; }
+    .page-version { font-size: 12px; color: var(--unicolor-muted); }
+    .page-intro { color: #4b5563; font-size: 13px; margin: 4px 0 20px; }
+
+    section.card {
+      background: #ffffff;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    section.card h2 {
+      font-size: 15px;
+      margin: 0 0 2px;
+    }
+
+    .card-help {
+      margin: 0 0 12px;
+      font-size: 12.5px;
+      color: var(--unicolor-muted);
+    }
+
+    .field {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-top: 1px solid #f0f2f6;
+    }
+    .field:first-of-type { border-top: none; }
+
+    .field-label { font-weight: 600; font-size: 13.5px; }
+    .field-help { font-size: 12px; color: var(--unicolor-muted); margin-top: 2px; }
+    .field-control { flex: none; min-width: 220px; text-align: right; }
+
+    select, input[type="text"], input[type="number"], textarea {
+      font-family: inherit;
+      font-size: 13px;
+      padding: 6px 8px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #ffffff;
+      color: #111827;
+      min-width: 200px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      text-align: left;
+    }
+
+    input[type="range"] { width: 200px; }
+
+    #language { flex-wrap: wrap; }
+
+    .segmented {
+      display: inline-flex;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .segmented button {
+      padding: 6px 12px;
+      border: none;
+      border-right: 1px solid var(--unicolor-border);
+      background: #ffffff;
+      color: #374151;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .segmented button:last-child { border-right: none; }
+    .segmented button.active {
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex: none;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch span {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #cfd6e2;
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+    .switch span::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: transform 0.15s ease;
+    }
+    .switch input:checked + span { background: var(--unicolor-accent); }
+    .switch input:checked + span::before { transform: translateX(20px); }
+
+    .button {
+      padding: 7px 12px;
+      border: 1px solid var(--unicolor-accent);
+      border-radius: 6px;
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .button:hover { background: #e0e9ff; }
+    .button.secondary {
+      border-color: var(--unicolor-border);
+      background: #ffffff;
+      color: #374151;
+    }
+    .button.danger {
+      border-color: #f3c6c6;
+      background: #fff5f5;
+      color: #b91c1c;
+    }
+
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .row.end { justify-content: flex-end; }
+
+    .list {
+      list-style: none;
+      margin: 10px 0 0;
+      padding: 0;
+    }
+    .list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      background: #fdfdff;
+    }
+    .list .remove {
+      border: none;
+      background: transparent;
+      color: #b91c1c;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+
+    .message {
+      min-height: 18px;
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+    .message.error { color: #b91c1c; }
+    .message.ok { color: var(--unicolor-ok); }
+
+    .status-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 20px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 12.5px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .status-bar.visible { opacity: 1; transform: translateY(0); }
+
+    .hint {
+      padding: 10px 12px;
+      border-left: 3px solid var(--unicolor-accent);
+      background: #f4f7ff;
+      font-size: 12.5px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    code {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #eef1f6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+    }
+  </style>
+  <link rel="stylesheet" href="pixel-theme.css">
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <h1>Réglages d&rsquo;UniConv</h1>
+    <span class="page-version" id="version">version …</span>
+    <button type="button" class="button secondary" id="open-tutorial">
+      Revoir le tutoriel
+    </button>
+  </header>
+
+  <p class="page-intro">
+    Chaque réglage est enregistré <strong>immédiatement</strong> et s&rsquo;applique
+    tout de suite à tous les onglets ouverts. Il n&rsquo;y a pas de bouton
+    «&nbsp;Enregistrer&nbsp;».
+  </p>
+
+  <!-- ====================================================================
+       1. DEVISE CIBLE
+       ==================================================================== -->
+  <section class="card">
+    <h2>Devise cible</h2>
+    <p class="card-help">
+      La monnaie dans laquelle les prix sont convertis quand vous survolez un
+      montant.
+    </p>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Convertir vers</div>
+        <div class="field-help" id="target-help">
+          Tapez pour filtrer : le nom du pays fonctionne aussi
+          («&nbsp;chine&nbsp;» trouve le yuan).
+        </div>
+      </div>
+      <div class="field-control">
+        <input type="text" id="target-search" placeholder="Rechercher une devise…">
+        <select id="target-currency" size="6" style="margin-top:6px; min-width:220px;"></select>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       2. CE QU'ON CONVERTIT
+       ==================================================================== -->
+  <section class="card">
+    <h2>Ce que l&rsquo;extension convertit</h2>
+    <p class="card-help">
+      Décochez une catégorie pour ne plus la voir du tout : plus de
+      soulignement, plus de bulle.
+    </p>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Devises</div>
+        <div class="field-help">Les prix (10&nbsp;€, $1,234.56, 100&nbsp;JPY…).</div>
+      </div>
+      <div class="field-control">
+        <label class="switch">
+          <input type="checkbox" id="detect-currencies" checked>
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Unités de mesure</div>
+        <div class="field-help">Les distances, poids, températures, volumes.</div>
+      </div>
+      <div class="field-control">
+        <label class="switch">
+          <input type="checkbox" id="detect-units" checked>
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Système d&rsquo;unités cible</div>
+        <div class="field-help">
+          Vers quel système convertir les mesures. Il y a aussi un bouton
+          équivalent dans le popup.
+        </div>
+      </div>
+      <div class="field-control">
+        <div class="segmented" id="unit-system">
+          <button type="button" data-value="metric">Métrique</button>
+          <button type="button" data-value="imperial">Impérial</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       3. AFFICHAGE
+       ==================================================================== -->
+
+  <section class="card">
+    <h2>Affichage</h2>
+    <p class="card-help">Le confort de la bulle au quotidien.</p>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Délai d&rsquo;apparition</div>
+        <div class="field-help">
+          Attendre avant d&rsquo;afficher la bulle évite qu&rsquo;elle surgisse
+          pendant un simple déplacement de souris.
+        </div>
+      </div>
+      <div class="field-control">
+        <input type="range" id="hover-delay" min="0" max="1000" step="50" value="0">
+        <div class="field-help"><span id="hover-delay-label">immédiat</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Thème de la bulle</div>
+        <div class="field-help">
+          «&nbsp;Auto&nbsp;» suit le réglage clair/sombre de votre système.
+        </div>
+      </div>
+      <div class="field-control">
+        <div class="segmented" id="theme">
+          <button type="button" data-value="light">Clair</button>
+          <button type="button" data-value="dark">Sombre</button>
+          <button type="button" data-value="auto">Auto</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Taille de la bulle</div>
+        <div class="field-help">
+          Une taille mémorisée est appliquée à chaque ouverture. Ce bouton
+          revient à la taille d&rsquo;origine.
+        </div>
+      </div>
+      <div class="field-control">
+        <button type="button" class="button secondary" id="reset-size">
+          Réinitialiser la taille
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Langue</div>
+        <div class="field-help">
+          Langue des textes de l&rsquo;extension (la bulle, le popup) et du
+          format des nombres.
+        </div>
+      </div>
+      <div class="field-control">
+        <div class="segmented" id="language">
+          <button type="button" data-value="fr">Français</button>
+          <button type="button" data-value="en">English</button>
+          <button type="button" data-value="es">Español</button>
+          <button type="button" data-value="ru">Русский</button>
+          <button type="button" data-value="zh">中文</button>
+          <button type="button" data-value="ar">العربية</button>
+          <button type="button" data-value="auto">Auto</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       4. FUSEAUX HORAIRES (iteration 11)
+       ==================================================================== -->
+  <section class="card">
+    <h2>Fuseaux horaires</h2>
+    <p class="card-help">
+      Une heure accompagn&eacute;e d&rsquo;un fuseau (&laquo;&nbsp;14:30
+      CET&nbsp;&raquo;, &laquo;&nbsp;14:30 heure de Paris&nbsp;&raquo;,
+      &laquo;&nbsp;2026-10-24T14:30:00Z&nbsp;&raquo;) est convertie dans la
+      ville de votre choix. Une heure <strong>sans</strong> fuseau n&rsquo;est
+      jamais touch&eacute;e&nbsp;: elle est ambigu&euml;.
+    </p>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Convertir les heures avec fuseau</div>
+        <div class="field-help">
+          D&eacute;coch&eacute;, l&rsquo;extension ignore compl&egrave;tement les
+          heures.
+        </div>
+      </div>
+      <div class="field-control">
+        <label class="switch">
+          <input type="checkbox" id="detect-timezones" checked>
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Ville de r&eacute;f&eacute;rence</div>
+        <div class="field-help">
+          C&rsquo;est l&rsquo;heure affich&eacute;e dans la bulle.
+          &laquo;&nbsp;Ma ville&nbsp;&raquo; suit le fuseau de votre
+          ordinateur. N&rsquo;importe quelle autre ville peut &ecirc;tre
+          choisie depuis le menu de la bulle.
+        </div>
+      </div>
+      <div class="field-control">
+        <select id="target-timezone" style="min-width:250px;"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Format des heures</div>
+        <div class="field-help">
+          &laquo;&nbsp;Automatique&nbsp;&raquo; suit la convention de votre
+          syst&egrave;me (24&nbsp;h en France).
+        </div>
+      </div>
+      <div class="field-control">
+        <div class="segmented" id="time-format">
+          <button type="button" data-value="auto">Automatique</button>
+          <button type="button" data-value="24">24 h</button>
+          <button type="button" data-value="12">12 h</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       5. LISTE NOIRE
+       ==================================================================== -->
+  <section class="card">
+    <h2>Sites exclus</h2>
+    <p class="card-help">
+      Sur ces sites, l&rsquo;extension ne fait <strong>rien</strong> : aucun
+      scan, aucune bulle. Pratique pour une boîte mail ou un éditeur de code.
+      Une liste par défaut est déjà active (Gmail, GitHub, Notion…).
+    </p>
+
+    <div class="row">
+      <input type="text" id="blacklist-input" placeholder="exemple.com"
+             style="flex:1; min-width:0;">
+      <button type="button" class="button" id="blacklist-add">Ajouter</button>
+    </div>
+    <div class="message" id="blacklist-message"></div>
+
+    <ul class="list" id="blacklist-list"></ul>
+  </section>
+
+  <!-- ====================================================================
+       6. LECTURE DANS LES IMAGES (OCR)
+       ==================================================================== -->
+  <section class="card">
+    <h2>Scan (OCR) — lire dans les images</h2>
+    <p class="card-help">
+      Aujourd&rsquo;hui, l&rsquo;extension lit les prix écrits en texte et dans
+      les attributs des images. Lire un prix <strong>dessiné dans une
+      image</strong> demande un moteur de reconnaissance de caractères (OCR).
+    </p>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Activer le Scan (OCR)</div>
+        <div class="field-help">
+          Coché par défaut. Décoché, le bouton <strong>Scan</strong> du popup
+          et votre raccourci personnel sont inactifs : aucune capture
+          d&rsquo;écran n&rsquo;est possible.
+        </div>
+      </div>
+      <div class="field-control">
+        <label class="switch">
+          <input type="checkbox" id="ocr-enabled">
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="hint">
+      <strong>Comment s&rsquo;en servir.</strong> Bouton <strong>Scan</strong>
+      du popup (ou votre raccourci personnel, voir « Raccourcis » plus bas) :
+      <strong>dessinez un rectangle</strong> sur la page, seule cette zone est
+      photographiée et lue. C&rsquo;est la méthode recommandée : précise, et
+      elle ne coûte rien tant que vous ne la demandez pas.
+    </div>
+
+    <div class="field">
+      <div>
+        <div class="field-label">Tester le moteur</div>
+        <div class="field-help">
+          Dessine un texte connu, le fait lire, et affiche le résultat. Sert à
+          vérifier que la lecture fonctionne sur cet ordinateur.
+        </div>
+      </div>
+      <div class="field-control">
+        <button type="button" class="button secondary" id="test-ocr">
+          Tester le moteur OCR
+        </button>
+      </div>
+    </div>
+    <div class="message" id="ocr-test-message"></div>
+
+  </section>
+
+  <!-- ====================================================================
+       7. SAUVEGARDE
+       ==================================================================== -->
+  <section class="card">
+    <h2>Raccourcis clavier</h2>
+    <p class="card-help">
+      UniConv ne réserve <strong>aucune touche</strong> : vous choisissez vos
+      raccourcis dans le navigateur, sans conflit avec Firefox.
+    </p>
+    <ul class="card-help">
+      <li><strong>Firefox</strong> : <code>about:addons</code> → roue dentée →
+        <em>Gérer les raccourcis de l&rsquo;extension</em>.</li>
+      <li><strong>Chrome / Edge / Brave / Opera</strong> :
+        <code>chrome://extensions/shortcuts</code>.</li>
+    </ul>
+    <p class="card-help">
+      Deux commandes : <strong>Lancer le Scan</strong> et
+      <strong>Ouvrir le convertisseur</strong> (la fenêtre s&rsquo;ouvre avec
+      le champ de montant déjà sélectionné).
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Sauvegarde des réglages</h2>
+    <p class="card-help">
+      Copiez le texte ci-dessous pour conserver vos réglages, ou collez-en un
+      puis cliquez sur «&nbsp;Importer&nbsp;».
+    </p>
+
+    <textarea id="export-zone" spellcheck="false"
+      placeholder='{"uniconv.targetCurrency":"USD", …}'></textarea>
+
+    <div class="row end" style="margin-top:8px;">
+      <button type="button" class="button secondary" id="export-copy">Copier</button>
+      <button type="button" class="button secondary" id="export-download">Télécharger</button>
+      <button type="button" class="button" id="import-apply">Importer</button>
+    </div>
+    <div class="message" id="import-message"></div>
+  </section>
+
+  <!-- ====================================================================
+       8. REMISE A ZERO
+       ==================================================================== -->
+  <section class="card">
+    <h2>Remise à zéro</h2>
+    <p class="card-help">
+      Restaure tous les réglages d&rsquo;origine. Vos sites exclus personnels
+      sont aussi effacés.
+    </p>
+    <div class="row">
+      <button type="button" class="button danger" id="reset-all">
+        Tout réinitialiser…
+      </button>
+    </div>
+    <div class="message" id="reset-message"></div>
+  </section>
+</main>
+
+<div class="status-bar" id="status-bar">Enregistré</div>
+
+<script src="i18n.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

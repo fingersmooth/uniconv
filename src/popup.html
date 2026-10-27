@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — src/popup.html
+  ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   La structure de la petite fenetre qui s'ouvre au clic sur l'icone.
+   A cette iteration, elle affiche l'etat des taux de change et permet de
+   les rafraichir manuellement.
+
+   A SAVOIR
+   --------
+   Une page de popup est fortement contrainte : elle ne peut pas etre
+   redimensionnee par l'utilisateur, et sa largeur doit etre fixee dans le CSS
+   (voir le style ci-dessous, largeur 268 pixels).
+
+   ITERATION 8 : cette page sera enrichie des vrais reglages (choix de la
+   devise cible, systeme d'unites, sites en liste noire).
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>UniConv</title>
+  <!--
+    Le fichier CSS est volontairement ecrit ici, en petit, plutot que dans un
+    fichier separe : moins de fichiers a charger pour une fenetre qui doit
+    s'afficher instantanement. Le gros de la mise en forme (les bulles) ira,
+    lui, dans une feuille de style separee a l'iteration 1.
+  -->
+  <style>
+    :root {
+      --unicolor-border: #d8dde5;
+      --unicolor-muted: #6b7280;
+      --unicolor-accent: #2f6bff;
+      --unicolor-ok: #1a7f37;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      width: 360px;
+      max-height: 640px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      /* La gouttiere reserve la place de la barre verticale : les boutons de
+         droite (engrenage, listes) ne passent plus dessous. */
+      scrollbar-gutter: stable;
+      margin: 0;
+      padding: 12px 20px 14px 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #111827;
+      background: #ffffff;
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--unicolor-border);
+    }
+
+    .popup-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .popup-header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: none;
+    }
+
+    .popup-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .ocr-header-button {
+      padding: 3px 8px;
+      border: 1px solid var(--unicolor-accent);
+      border-radius: 999px;
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+      font: inherit;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .ocr-header-button:hover { background: #dfe9ff; }
+
+    .gear-button {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--unicolor-muted);
+      line-height: 0;
+      cursor: pointer;
+    }
+
+    .gear-icon {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+
+    .gear-button:hover {
+      border-color: var(--unicolor-border);
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .gear-button:focus-visible {
+      outline: 2px solid #93c5fd;
+      outline-offset: 1px;
+    }
+
+    .scan-toggle,
+    .detection-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 8px 0 0;
+      font-size: 11px;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    .scan-toggle input,
+    .detection-toggle input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: var(--unicolor-accent);
+    }
+    .ocr-header-button:disabled { opacity: 0.55; cursor: default; }
+
+    .popup-version {
+      font-size: 11px;
+      color: var(--unicolor-muted);
+      white-space: nowrap;
+    }
+
+    .popup-note {
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: #374151;
+    }
+
+    .popup-hint {
+      margin: 6px 0 0;
+      font-size: 11px;
+      color: var(--unicolor-muted);
+    }
+
+    .status-line {
+      margin: 10px 0 0;
+      padding: 7px 9px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .status-label {
+      font-weight: 600;
+      color: var(--unicolor-accent);
+    }
+
+    kbd {
+      padding: 1px 4px;
+      border: 1px solid var(--unicolor-border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: #ffffff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+    }
+
+    .rates-box {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .rates-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      color: var(--unicolor-accent);
+      margin-bottom: 4px;
+    }
+
+    .rates-date {
+      font-weight: 400;
+      color: var(--unicolor-muted);
+    }
+
+    .rates-detail {
+      margin: 2px 0 0;
+    }
+
+    .refresh-button {
+      margin-top: 8px;
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid var(--unicolor-accent);
+      border-radius: 5px;
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .refresh-button:hover { background: #dfe9ff; }
+    .refresh-button:disabled { opacity: 0.55; cursor: default; }
+
+    .badge-ok { color: #1a7f37; font-weight: 600; }
+    .badge-warn { color: #b45309; font-weight: 600; }
+    .badge-error { color: #b91c1c; font-weight: 600; }
+
+    .content-box {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 11px;
+      color: #374151;
+    }
+    .content-box-title {
+      font-weight: 600;
+      color: var(--unicolor-accent);
+      margin-bottom: 4px;
+    }
+    .content-detail {
+      margin: 2px 0 0;
+      line-height: 1.4;
+    }
+
+    .guard-box {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 11px;
+      color: #374151;
+    }
+    .guard-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      color: var(--unicolor-accent);
+      margin-bottom: 6px;
+    }
+    .guard-state {
+      font-weight: 600;
+      color: #1a7f37;
+    }
+    .guard-state.paused { color: #b45309; }
+
+    .reference-box {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #f8fafc;
+      font-size: 11px;
+      color: #374151;
+    }
+    .reference-title {
+      font-weight: 600;
+      color: var(--unicolor-accent);
+      margin-bottom: 4px;
+    }
+    .reference-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .reference-label {
+      flex: none;
+      width: 52px;
+      padding-top: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    .reference-currency-control {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+    .reference-field {
+      width: 100%;
+      min-width: 0;
+      padding: 4px 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: #111827;
+      font-family: inherit;
+      font-size: 11px;
+      line-height: 1.3;
+      text-align: left;
+      cursor: pointer;
+    }
+    .reference-field:hover { background: #f3f4f6; }
+    .reference-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      padding: 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 6px;
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+    }
+    .reference-menu[hidden] { display: none; }
+    .reference-list {
+      max-height: 240px;
+      overflow-y: auto;
+      margin-top: 5px;
+    }
+    .reference-section {
+      margin-top: 4px;
+      padding: 7px 6px 4px;
+      border-top: 1px solid #94a3b8;
+      background: #f1f5f9;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #334155;
+    }
+    .reference-row-item {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .reference-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+      padding: 5px 6px;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: #111827;
+      font-family: inherit;
+      font-size: 11px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .reference-flag {
+      flex: none;
+      width: 18px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1;
+    }
+    .reference-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .reference-item:hover,
+    .reference-item.selected { background: #eef3ff; color: var(--unicolor-accent); }
+    .reference-pin {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      font-size: 11px;
+      cursor: pointer;
+      filter: grayscale(1);
+      opacity: 0.35;
+    }
+    .reference-pin:hover { opacity: 0.75; }
+    .reference-pin.pinned { filter: none; opacity: 1; }
+    .reference-search,
+    .reference-select {
+      width: 100%;
+      min-width: 0;
+      padding: 4px 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: #111827;
+      font-family: inherit;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+    .reference-search::placeholder { color: #9ca3af; }
+    .reference-hint {
+      margin: 6px 0 0;
+      font-size: 10.5px;
+      color: #6b7280;
+    }
+    .units-toggle {
+      display: flex;
+      gap: 6px;
+    }
+    .units-toggle button {
+      flex: 1;
+      padding: 5px 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: #374151;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .units-toggle button.active {
+      border-color: var(--unicolor-accent);
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+    }
+    /* Convertisseur traditionnel (iteration 25). */
+    .converter {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .converter-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .converter-tab {
+      flex: 1;
+      padding: 4px 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: #374151;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .converter-tab.active {
+      border-color: var(--unicolor-accent);
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+    }
+
+    .converter-label {
+      display: block;
+      margin: 6px 0 3px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .converter-input,
+    .converter-select {
+      width: 100%;
+      padding: 5px 6px;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: #111827;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .converter-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .converter-row .converter-select { flex: 1; min-width: 0; }
+
+    .converter-swap {
+      flex: none;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border: 1px solid var(--unicolor-border);
+      border-radius: 5px;
+      background: #ffffff;
+      color: var(--unicolor-accent);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .converter-swap:hover { background: #eef3ff; }
+
+    .converter-result {
+      display: block;
+      margin-top: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .converter-detail {
+      margin: 2px 0 0;
+      min-height: 13px;
+      font-size: 10.5px;
+      color: var(--unicolor-muted);
+    }
+
+    .converter-tab:focus-visible,
+    .converter-input:focus-visible,
+    .converter-select:focus-visible,
+    .converter-swap:focus-visible,
+    .ocr-header-button:focus-visible {
+      outline: 2px solid #93c5fd;
+      outline-offset: 1px;
+    }
+
+
+    /* Rubrique de soutien, tout en bas du popup. */
+    .donation-footer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 2px solid var(--unicolor-border);
+      text-align: center;
+      font-size: 11px;
+      color: var(--unicolor-muted);
+    }
+    .donation-footer p { margin: 0 0 7px; }
+    .donation-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border: 2px solid var(--pixel-ink, #071018);
+      border-radius: 3px;
+      background: #FDE68A;
+      color: #071018;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 2px 2px 0 var(--pixel-ink, #071018);
+    }
+    .donation-link:hover { filter: brightness(1.04); }
+    .donation-link:active {
+      transform: translate(2px, 2px);
+      box-shadow: none;
+    }
+    .donation-link:focus-visible {
+      outline: 2px solid var(--unicolor-accent);
+      outline-offset: 2px;
+    }
+  </style>
+  <link rel="stylesheet" href="pixel-theme.css">
+</head>
+<body>
+  <header class="popup-header">
+    <div class="popup-title-row">
+      <h1 class="popup-title">UniConv</h1>
+      <button type="button" class="ocr-header-button" id="ocr-button"
+              title="Scanner une zone de l'ecran">Scan</button>
+    </div>
+    <div class="popup-header-right">
+      <span class="popup-version" id="version">version …</span>
+      <button type="button" class="gear-button" id="open-options"
+              title="Reglages" aria-label="Ouvrir les reglages">
+        <svg class="gear-icon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="3.2"></circle>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.6.66 1.05 1.28 1.1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="reference-box" aria-label="Unités de référence">
+    <div class="reference-title">Unités de référence</div>
+    <div class="reference-row">
+      <label class="reference-label" for="reference-currency-field">Monnaie</label>
+      <div class="reference-currency-control">
+        <button type="button" id="reference-currency-field" class="reference-field"
+                aria-haspopup="listbox" aria-expanded="false">
+          <span id="reference-currency-label">EUR — Euro</span>
+        </button>
+        <div class="reference-menu" id="reference-currency-menu" hidden>
+          <input type="search" id="reference-currency-search" class="reference-search"
+                 placeholder="Rechercher une devise..." aria-label="Rechercher une monnaie">
+          <div class="reference-list" id="reference-currency-list" role="listbox"
+               aria-label="Monnaies de référence"></div>
+        </div>
+      </div>
+    </div>
+    <div class="reference-row">
+      <label class="reference-label" for="reference-timezone">Fuseau</label>
+      <select id="reference-timezone" class="reference-select"
+              aria-label="Fuseau horaire de référence"></select>
+    </div>
+    <div class="reference-row">
+      <span class="reference-label">Unités</span>
+      <div class="units-toggle">
+        <button type="button" id="units-metric">Métrique</button>
+        <button type="button" id="units-imperial">Impérial</button>
+      </div>
+    </div>
+    <p class="reference-hint">
+      Les valeurs déjà dans ces unités ne sont pas soulignées.
+    </p>
+  </section>
+
+  <label class="scan-toggle" for="ocr-enabled-popup">
+    <input type="checkbox" id="ocr-enabled-popup" checked>
+    <span>Activer le Scan</span>
+  </label>
+
+  <section class="converter" aria-label="Convertisseur">
+    <div class="converter-tabs" role="tablist" aria-label="Type de conversion">
+      <button type="button" class="converter-tab active" id="tab-currency"
+              role="tab" aria-selected="true" aria-controls="pane-currency">Devises</button>
+      <button type="button" class="converter-tab" id="tab-unit"
+              role="tab" aria-selected="false" aria-controls="pane-unit">Unites</button>
+    </div>
+
+    <div id="pane-currency" class="converter-pane" role="tabpanel" aria-labelledby="tab-currency">
+      <label class="converter-label" for="conv-amount">Montant</label>
+      <input class="converter-input" id="conv-amount" type="number"
+             inputmode="decimal" step="any" min="0" value="1">
+      <div class="converter-row">
+        <select class="converter-select" id="conv-from" aria-label="Devise de depart"></select>
+        <button type="button" class="converter-swap" id="conv-swap"
+                title="Inverser les devises" aria-label="Inverser les devises">&#8644;</button>
+        <select class="converter-select" id="conv-to" aria-label="Devise d'arrivee"></select>
+      </div>
+      <output class="converter-result" id="conv-result"
+              for="conv-amount conv-from conv-to">&#8212;</output>
+      <p class="converter-detail" id="conv-detail"></p>
+    </div>
+
+    <div id="pane-unit" class="converter-pane" role="tabpanel" aria-labelledby="tab-unit" hidden>
+      <label class="converter-label" for="unit-category">Categorie</label>
+      <select class="converter-select" id="unit-category" aria-label="Categorie d'unite"></select>
+      <label class="converter-label" for="unit-amount">Montant</label>
+      <input class="converter-input" id="unit-amount" type="number"
+             inputmode="decimal" step="any" value="1">
+      <div class="converter-row">
+        <select class="converter-select" id="unit-from" aria-label="Unite de depart"></select>
+        <button type="button" class="converter-swap" id="unit-swap"
+                title="Inverser les unites" aria-label="Inverser les unites">&#8644;</button>
+        <select class="converter-select" id="unit-to" aria-label="Unite d'arrivee"></select>
+      </div>
+      <output class="converter-result" id="unit-result"
+              for="unit-amount unit-from unit-to">&#8212;</output>
+    </div>
+  </section>
+
+  <p class="popup-hint" id="ocr-status" role="status"></p>
+
+  <p class="popup-note">
+    Survolez un montant sur n&rsquo;importe quelle page : sa valeur dans votre
+    <strong>monnaie de r&eacute;f&eacute;rence</strong> s&rsquo;affiche.
+  </p>
+
+  <section class="rates-box" aria-label="Etat des taux de change">
+    <div class="rates-title">
+      <span>Taux de change</span>
+      <span class="rates-date" id="rates-date">—</span>
+    </div>
+    <p class="rates-detail">
+      <span id="rates-status">chargement…</span>
+    </p>
+    <button type="button" class="refresh-button" id="refresh-rates">
+      Rafraichir les taux
+    </button>
+  </section>
+
+  <section class="guard-box" aria-label="Activation de la detection">
+    <div class="guard-title">
+      <span>Detection</span>
+      <span class="guard-state" id="guard-state">active</span>
+    </div>
+    <label class="detection-toggle" for="detection-enabled">
+      <input type="checkbox" id="detection-enabled" checked>
+      <span>Activer la detection</span>
+    </label>
+    <p class="popup-hint">
+      Decochez pour suspendre sur toutes les pages : l&rsquo;icone affiche
+      <strong>OFF</strong>.
+    </p>
+  </section>
+
+  <section class="content-box" aria-label="Contenu analyse sur la derniere page">
+    <div class="content-box-title">Derniere page analysee</div>
+    <p class="content-detail" id="scan-stats">
+      aucune analyse enregistree
+    </p>
+    <p class="content-detail" id="ignored-stats"></p>
+  </section>
+
+  <p class="status-line">
+    <span class="status-label">Arriere-plan :</span>
+    <span id="background-status">verification…</span>
+  </p>
+
+
+  <button type="button" class="refresh-button" id="open-tutorial">
+    Revoir le tutoriel
+  </button>
+
+  <p class="popup-hint">
+    Les taux proviennent de la Banque centrale europeenne, via Frankfurter.
+    La console s&rsquo;ouvre avec <kbd>Cmd</kbd> + <kbd>Shift</kbd> +
+    <kbd>J</kbd>.
+  </p>
+
+
+  <footer class="donation-footer" aria-label="Soutenir UniConv">
+    <p>UniConv reste gratuit, sans publicité.</p>
+    <!-- Page de don personnelle de l'auteur. -->
+    <a class="donation-link" href="https://ko-fi.com/fingersmooth"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Soutenir UniConv sur Ko-fi (nouvel onglet)">
+      <span aria-hidden="true">☕</span>
+      <span>Offrir un café sur Ko-fi</span>
+    </a>
+  </footer>
+
+  <!-- popup.js est charge a la fin du body : ainsi tous les elements HTML
+       ci-dessus existent deja quand le script cherche a ecrire dedans. -->
+  <script src="i18n.js"></script>
+  <script src="converter.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — test/fuseaux.html
+  ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   Verifier la conversion des FUSEAUX HORAIRES (iteration 11) :
+     - les differentes facons d'ecrire une heure AVEC son fuseau ;
+     - les pieges qui ne doivent RIEN afficher (heure sans fuseau, scores,
+       versions, adresses web, minutes impossibles...).
+
+   COMMENT S'EN SERVIR
+   -------------------
+   1. Reglages : « Convertir les heures avec fuseau » coche, ville de
+      reference Paris (pour comparer avec la colonne « attendu »).
+   2. Servir le dossier en http, ouvrir cette page.
+   3. Survoler chaque ligne de la colonne « Ecrit sur la page ».
+   4. Cliquer sur une heure : le menu des villes s'ouvre (comme les devises).
+
+   CE QU'IL FAUT OBSERVER
+   ----------------------
+   - Colonne « attendu » : c'est l'heure que la bulle doit afficher.
+   - Section « Pieges » : AUCUNE bulle, aucun pointille.
+
+   Les donnees de la page sont aussi lues par tools/timezone-tests.mjs :
+   une seule source de verite pour l'affichage et pour les tests.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>UniConv — test des fuseaux horaires</title>
+  <style>
+    body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #111827;
+      background: #ffffff;
+    }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 17px; margin: 30px 0 8px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .intro { color: #4b5563; font-size: 14px; margin: 0 0 8px; }
+    .note { padding: 10px 12px; border-left: 3px solid #2f6bff; background: #f4f7ff; font-size: 13px; margin: 8px 0; }
+    .ok { padding: 10px 12px; border-left: 3px solid #1a7f37; background: #f0fdf4; font-size: 13px; margin: 8px 0; }
+    .warn { padding: 10px 12px; border-left: 3px solid #d97706; background: #fffbeb; font-size: 13px; margin: 8px 0; }
+    code { padding: 1px 5px; border-radius: 3px; background: #f3f4f6;
+           font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+    th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: #6b7280; }
+    td.written { font-size: 15px; color: #111827; }
+    td.zone { font-size: 13px; color: #4b5563; }
+    td.expected { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; color: #1a7f37; }
+    tr.trap td.expected { color: #b42318; }
+    .why { font-size: 12.5px; color: #6b7280; }
+    .counter { font-size: 13px; color: #6b7280; }
+  </style>
+  <link rel="stylesheet" href="test-nav.css">
+</head>
+<body>
+<nav class="test-nav" aria-label="Pages de test">
+  <span class="test-nav-title">UniConv · tests</span>
+  <a href="formats.html">Formats</a>
+  <a href="monnaies.html">Monnaies</a>
+  <a href="faux-positifs.html">Faux positifs</a>
+  <a href="dynamique.html">Dynamique</a>
+  <a href="fuseaux.html" aria-current="page">Fuseaux</a>
+</nav>
+
+
+  <h1>UniConv — fuseaux horaires</h1>
+  <p class="intro">
+    Toutes les façons d&rsquo;écrire une heure <strong>avec son fuseau</strong>,
+    et les pièges qui ne doivent rien afficher.
+  </p>
+
+  <p class="note">
+    <strong>Avant de commencer :</strong> réglages → «&nbsp;Convertir les heures
+    avec fuseau&nbsp;» coché, ville de référence <strong>Paris</strong> (pour
+    comparer avec la colonne «&nbsp;attendu&nbsp;»), format 24&nbsp;h.
+  </p>
+
+  <p class="ok">
+    <strong>Attendu :</strong> au survol, la bulle affiche l&rsquo;heure de la
+    colonne «&nbsp;attendu&nbsp;», le décalage («&nbsp;+1&nbsp;h&nbsp;»…) et,
+    si le jour change, «&nbsp;le lendemain&nbsp;» ou «&nbsp;la veille&nbsp;».
+    Au clic, le menu des villes s&rsquo;ouvre.
+  </p>
+
+  <h2>1. Heures avec fuseau (doivent se convertir)</h2>
+  <p class="counter" id="valid-count"></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Écrit sur la page</th>
+        <th>Fuseau lu</th>
+        <th>Attendu (à Paris)</th>
+      </tr>
+    </thead>
+    <tbody id="valid-rows"></tbody>
+  </table>
+
+  <h2>2. Pièges (ne doivent RIEN afficher)</h2>
+  <p class="counter" id="trap-count"></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Écrit sur la page</th>
+        <th>Pourquoi on l&rsquo;ignore</th>
+        <th>Attendu</th>
+      </tr>
+    </thead>
+    <tbody id="trap-rows"></tbody>
+  </table>
+
+  <p class="warn">
+    <strong>Rappel :</strong> une heure <em>sans</em> fuseau est ambiguë
+    («&nbsp;14:30&nbsp;», c&rsquo;est midi et demi où&nbsp;?). L&rsquo;extension
+    ne la touche jamais : c&rsquo;est le meilleur filtre à faux positifs, et
+    c&rsquo;est voulu.
+  </p>
+
+  <!-- ====================================================================
+       Donnees : une seule source pour la page et pour les tests.
+       ==================================================================== -->
+  <script type="application/json" id="tz-cases">
+  {
+    "now": "2026-10-24T12:00:00Z",
+    "valid": [
+      { "text": "14:30 CET", "zone": 60, "hour": 14, "minute": 30, "utc": "2026-10-24T13:30:00Z", "label": "abréviation (hiver)" },
+      { "text": "14:30 CEST", "zone": 120, "hour": 14, "minute": 30, "utc": "2026-10-24T12:30:00Z", "label": "abréviation (été)" },
+      { "text": "2:30 PM EST", "zone": -300, "hour": 14, "minute": 30, "utc": "2026-10-24T19:30:00Z", "label": "12 h + abréviation" },
+      { "text": "12:00 AM UTC", "zone": 0, "hour": 0, "minute": 0, "utc": "2026-10-24T00:00:00Z", "label": "minuit en 12 h" },
+      { "text": "12:00 PM UTC", "zone": 0, "hour": 12, "minute": 0, "utc": "2026-10-24T12:00:00Z", "label": "midi en 12 h" },
+      { "text": "14:30 UTC", "zone": 0, "hour": 14, "minute": 30, "utc": "2026-10-24T14:30:00Z", "label": "UTC" },
+      { "text": "14:30 GMT+2", "zone": 120, "hour": 14, "minute": 30, "utc": "2026-10-24T12:30:00Z", "label": "GMT + décalage" },
+      { "text": "14:30 UTC-3", "zone": -180, "hour": 14, "minute": 30, "utc": "2026-10-24T17:30:00Z", "label": "décalage négatif" },
+      { "text": "00:30 UTC+5:30", "zone": 330, "hour": 0, "minute": 30, "utc": "2026-10-23T19:00:00Z", "label": "demi-heure" },
+      { "text": "14:30Z", "zone": 0, "hour": 14, "minute": 30, "utc": "2026-10-24T14:30:00Z", "label": "Z collé" },
+      { "text": "10h30 UTC", "zone": 0, "hour": 10, "minute": 30, "utc": "2026-10-24T10:30:00Z", "label": "écriture française h" },
+      { "text": "10 h UTC", "zone": 0, "hour": 10, "minute": 0, "utc": "2026-10-24T10:00:00Z", "label": "heure ronde française" },
+      { "text": "14:30 heure de Paris", "zone": "Europe/Paris", "hour": 14, "minute": 30, "utc": "2026-10-24T12:30:00Z", "label": "expression française" },
+      { "text": "14:30 heure de l'Est", "zone": "America/New_York", "hour": 14, "minute": 30, "utc": "2026-10-24T18:30:00Z", "label": "heure de l'Est" },
+      { "text": "14:30 Pacific Time", "zone": "America/Los_Angeles", "hour": 14, "minute": 30, "utc": "2026-10-24T21:30:00Z", "label": "expression anglaise" },
+      { "text": "14:30 Europe/Paris", "zone": "Europe/Paris", "hour": 14, "minute": 30, "utc": "2026-10-24T12:30:00Z", "label": "nom IANA" },
+      { "text": "14:30 Asia/Kolkata", "zone": "Asia/Kolkata", "hour": 14, "minute": 30, "utc": "2026-10-24T09:00:00Z", "label": "décalage +5:30" },
+      { "text": "14:30 Asia/Kathmandu", "zone": "Asia/Kathmandu", "hour": 14, "minute": 30, "utc": "2026-10-24T08:45:00Z", "label": "décalage +5:45" },
+      { "text": "23:00 CET", "zone": 60, "hour": 23, "minute": 0, "utc": "2026-10-24T22:00:00Z", "label": "change de jour à Tokyo" },
+      { "text": "14:30 IST", "zone": 330, "hour": 14, "minute": 30, "utc": "2026-10-24T09:00:00Z", "label": "abréviation ambiguë (Inde)" },
+      { "text": "2026-01-15T14:30:00Z", "zone": 0, "hour": 14, "minute": 30, "utc": "2026-01-15T14:30:00Z", "now": "2026-10-24T12:00:00Z", "label": "ISO 8601 avec date" },
+      { "text": "2026-07-15T14:30:00+02:00", "zone": 120, "hour": 14, "minute": 30, "utc": "2026-07-15T12:30:00Z", "now": "2026-10-24T12:00:00Z", "label": "ISO 8601 avec décalage" },
+      { "text": "2026-10-24T14:30:00+05:45", "zone": 345, "hour": 14, "minute": 30, "utc": "2026-10-24T08:45:00Z", "label": "ISO 8601 à 5 h 45" },
+      { "text": "Sat, 24 Oct 2026 14:30:00 +0200", "zone": 120, "hour": 14, "minute": 30, "utc": "2026-10-24T12:30:00Z", "label": "RFC 2822 (courriel)" },
+      { "text": "14:30 Europe/Paris", "zone": "Europe/Paris", "hour": 14, "minute": 30, "utc": "2026-01-15T13:30:00Z", "now": "2026-01-15T12:00:00Z", "label": "heure d'hiver à Paris" },
+      { "text": "14:30 Europe/Paris", "zone": "Europe/Paris", "hour": 14, "minute": 30, "utc": "2026-07-15T12:30:00Z", "now": "2026-07-15T12:00:00Z", "label": "heure d'été à Paris" },
+      { "text": "14:30 America/New_York", "zone": "America/New_York", "hour": 14, "minute": 30, "utc": "2026-01-15T19:30:00Z", "now": "2026-01-15T12:00:00Z", "label": "heure d'hiver à New York" },
+      { "text": "14:30 America/New_York", "zone": "America/New_York", "hour": 14, "minute": 30, "utc": "2026-07-15T18:30:00Z", "now": "2026-07-15T12:00:00Z", "label": "heure d'été à New York" },
+      { "text": "14:30 Australia/Sydney", "zone": "Australia/Sydney", "hour": 14, "minute": 30, "utc": "2026-01-15T03:30:00Z", "now": "2026-01-15T12:00:00Z", "label": "heure d'été à Sydney" },
+      { "text": "14:30 Australia/Sydney", "zone": "Australia/Sydney", "hour": 14, "minute": 30, "utc": "2026-07-15T04:30:00Z", "now": "2026-07-15T12:00:00Z", "label": "heure d'hiver à Sydney" },
+      { "text": "14:30 Pacific/Auckland", "zone": "Pacific/Auckland", "hour": 14, "minute": 30, "utc": "2026-01-15T01:30:00Z", "now": "2026-01-15T00:00:00Z", "label": "Auckland en été" },
+      { "text": "14:30 Africa/Casablanca", "zone": "Africa/Casablanca", "hour": 14, "minute": 30, "utc": "2026-01-15T13:30:00Z", "now": "2026-01-15T12:00:00Z", "label": "Casablanca" },
+      { "text": "14:30 Atlantic/Reykjavik", "zone": "Atlantic/Reykjavik", "hour": 14, "minute": 30, "utc": "2026-10-24T14:30:00Z", "label": "Reykjavik (UTC toute l'année)" }
+    ],
+    "traps": [
+      { "text": "14:30", "why": "aucun fuseau : ambigu" },
+      { "text": "16:9", "why": "ratio, pas une heure" },
+      { "text": "score 3:2", "why": "score de match" },
+      { "text": "version 1.2.3", "why": "numéro de version" },
+      { "text": "le 24/10/2026", "why": "date sans heure" },
+      { "text": "à 15h", "why": "heure sans fuseau" },
+      { "text": "prix 14,30 EUR", "why": "montant, pas une heure" },
+      { "text": "14:30 est", "why": "« est » minuscule n'est pas EST" },
+      { "text": "http://exemple.fr:8080/page", "why": "port d'adresse web" },
+      { "text": "de 10:00 à 12:00", "why": "plage horaire sans fuseau" },
+      { "text": "14:60 CET", "why": "60 minutes n'existent pas" },
+      { "text": "25:00 CET", "why": "25 heures n'existent pas" },
+      { "text": "24:30 CET", "why": "24 h seulement à 24:00" },
+      { "text": "0:99 UTC", "why": "99 minutes n'existent pas" },
+      { "text": "12h", "why": "heure seule, sans fuseau" }
+    ]
+  }
+  </script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var data = JSON.parse(document.getElementById('tz-cases').textContent);
+
+      /**
+       * Calcule l'heure attendue dans un fuseau cible, a partir de l'instant
+       * UTC fourni dans les donnees. Sert UNIQUEMENT a l'affichage : les tests
+       * automatisés comparent l'instant UTC, pas cette colonne.
+       */
+      function expectedIn(targetZone, utc) {
+        try {
+          return new Intl.DateTimeFormat('fr-FR', {
+            timeZone: targetZone,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }).format(new Date(utc));
+        } catch (error) {
+          return '?';
+        }
+      }
+
+      var validRows = document.getElementById('valid-rows');
+      for (var index = 0; index < data.valid.length; index += 1) {
+        var item = data.valid[index];
+        var row = document.createElement('tr');
+
+        var written = document.createElement('td');
+        written.className = 'written';
+        written.textContent = item.text;
+        row.appendChild(written);
+
+        var zone = document.createElement('td');
+        zone.className = 'zone';
+        zone.textContent = item.label;
+        row.appendChild(zone);
+
+        var expected = document.createElement('td');
+        expected.className = 'expected';
+        expected.textContent = expectedIn('Europe/Paris', item.utc) +
+          ' (UTC ' + item.utc.slice(11, 16) + ')';
+        row.appendChild(expected);
+
+        validRows.appendChild(row);
+      }
+
+      var trapRows = document.getElementById('trap-rows');
+      for (var trapIndex = 0; trapIndex < data.traps.length; trapIndex += 1) {
+        var trap = data.traps[trapIndex];
+        var trapRow = document.createElement('tr');
+        trapRow.className = 'trap';
+
+        var trapWritten = document.createElement('td');
+        trapWritten.className = 'written';
+        trapWritten.textContent = trap.text;
+        trapRow.appendChild(trapWritten);
+
+        var why = document.createElement('td');
+        why.className = 'why';
+        why.textContent = trap.why;
+        trapRow.appendChild(why);
+
+        var none = document.createElement('td');
+        none.className = 'expected';
+        none.textContent = 'aucune bulle';
+        trapRow.appendChild(none);
+
+        trapRows.appendChild(trapRow);
+      }
+
+      document.getElementById('valid-count').textContent =
+        data.valid.length + ' cas valides.';
+      document.getElementById('trap-count').textContent =
+        data.traps.length + ' pièges.';
+    })();
+  </script>
+
+</body>
+</html>

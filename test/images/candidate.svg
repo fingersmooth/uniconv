@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+  <rect width="320" height="200" fill="#dfe7f5"/>
+  <rect x="30" y="40" width="260" height="120" rx="10" fill="#ffffff" stroke="#b9c6dd" stroke-width="2"/>
+  <rect x="50" y="60" width="90" height="80" rx="6" fill="#c7d4ea"/>
+  <rect x="155" y="70" width="110" height="12" rx="6" fill="#a9b9d6"/>
+  <rect x="155" y="92" width="80" height="10" rx="5" fill="#c7d0e0"/>
+  <text x="155" y="130" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#1b4ed1">199,99 EUR</text>
+</svg>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — test/monnaies.html
+  ============================================================================
+
+   ROLE : tableau de reference des 167 devises detectees.
+
+   COMMENT S'EN SERVIR
+   -------------------
+   Survolez la colonne « Exemple » : chaque cellule est un vrai montant que
+   l'extension doit convertir. Le champ de recherche filtre par code, nom ou
+   pays.
+
+   Le tableau est GENERE par tools/generate-currency-page.mjs ; ne pas le
+   modifier a la main. Le test currency-meta-tests verifie que chaque devise
+   des metadonnees figure ici.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>UniConv — toutes les monnaies</title>
+  <link rel="stylesheet" href="test-nav.css">
+  <style>
+    body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #111827;
+      background: #ffffff;
+    }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 17px; margin: 30px 0 8px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    .intro { color: #4b5563; font-size: 14px; margin: 0 0 10px; }
+    .note { padding: 10px 12px; border-left: 3px solid #2f6bff; background: #f4f7ff; font-size: 13px; margin: 8px 0 14px; }
+    .toolbar { display: flex; align-items: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+    .toolbar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 7px 9px;
+      border: 1px solid #d8dde5;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .count { font-size: 13px; color: #6b7280; white-space: nowrap; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: #6b7280; position: sticky; top: 0; background: #ffffff; }
+    td.flag { width: 34px; font-size: 18px; }
+    td.code, td.symbol { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
+    td.example { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #1f4fd8; }
+    tr:hover { background: #f8fafc; }
+    .empty { padding: 12px; color: #6b7280; }
+  </style>
+</head>
+<body>
+<nav class="test-nav" aria-label="Pages de test">
+  <span class="test-nav-title">UniConv · tests</span>
+  <a href="formats.html">Formats</a>
+  <a href="monnaies.html" aria-current="page">Monnaies</a>
+  <a href="faux-positifs.html">Faux positifs</a>
+  <a href="dynamique.html">Dynamique</a>
+  <a href="fuseaux.html">Fuseaux</a>
+</nav>
+
+<h1>Toutes les monnaies (167)</h1>
+<p class="intro">
+  Les 167 devises détectées par UniConv, avec leur code ISO, leur
+  symbole quand il existe et un exemple à survoler. Les noms viennent des
+  métadonnées ; une seule devise (SLE) est détectée par son code seul.
+</p>
+
+<div class="note">
+  <strong>Astuce :</strong> survolez la colonne « Exemple » (par exemple
+  <code>100 KWD</code>) : la bulle doit afficher la conversion. Utilisez le
+  champ de recherche pour filtrer par code, nom ou pays.
+</div>
+
+<div class="toolbar">
+  <input type="search" id="filter" placeholder="Filtrer : code, nom ou pays…" aria-label="Filtrer les devises">
+  <span class="count" id="count">167 devises</span>
+</div>
+
+<table>
+  <thead>
+    <tr><th></th><th>Code</th><th>Nom</th><th>Symbole</th><th>Exemple</th></tr>
+  </thead>
+  <tbody id="rows">
+      <tr data-code="AFN" data-search="afn afghani af">
+        <td class="flag">🇦🇫</td>
+        <td class="code">AFN</td>
+        <td>Afghani</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AFN</td>
+      </tr>
+      <tr data-code="MGA" data-search="mga ariary malgache mg">
+        <td class="flag">🇲🇬</td>
+        <td class="code">MGA</td>
+        <td>Ariary malgache</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MGA</td>
+      </tr>
+      <tr data-code="THB" data-search="thb baht thailandais th">
+        <td class="flag">🇹🇭</td>
+        <td class="code">THB</td>
+        <td>Baht thailandais</td>
+        <td class="symbol">฿</td>
+        <td class="example">100 THB</td>
+      </tr>
+      <tr data-code="PAB" data-search="pab balboa panameen pa">
+        <td class="flag">🇵🇦</td>
+        <td class="code">PAB</td>
+        <td>Balboa panameen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 PAB</td>
+      </tr>
+      <tr data-code="ETB" data-search="etb birr ethiopien et">
+        <td class="flag">🇪🇹</td>
+        <td class="code">ETB</td>
+        <td>Birr ethiopien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ETB</td>
+      </tr>
+      <tr data-code="VES" data-search="ves bolivar venezuelien ve">
+        <td class="flag">🇻🇪</td>
+        <td class="code">VES</td>
+        <td>Bolivar venezuelien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 VES</td>
+      </tr>
+      <tr data-code="BOB" data-search="bob boliviano bo">
+        <td class="flag">🇧🇴</td>
+        <td class="code">BOB</td>
+        <td>Boliviano</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BOB</td>
+      </tr>
+      <tr data-code="GHS" data-search="ghs cedi ghaneen gh">
+        <td class="flag">🇬🇭</td>
+        <td class="code">GHS</td>
+        <td>Cedi ghaneen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GHS</td>
+      </tr>
+      <tr data-code="CRC" data-search="crc colon costaricien cr">
+        <td class="flag">🇨🇷</td>
+        <td class="code">CRC</td>
+        <td>Colon costaricien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CRC</td>
+      </tr>
+      <tr data-code="NIO" data-search="nio cordoba nicaraguayen ni">
+        <td class="flag">🇳🇮</td>
+        <td class="code">NIO</td>
+        <td>Cordoba nicaraguayen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 NIO</td>
+      </tr>
+      <tr data-code="DKK" data-search="dkk couronne danoise dk">
+        <td class="flag">🇩🇰</td>
+        <td class="code">DKK</td>
+        <td>Couronne danoise</td>
+        <td class="symbol">kr</td>
+        <td class="example">100 DKK</td>
+      </tr>
+      <tr data-code="FOK" data-search="fok couronne feroienne fo">
+        <td class="flag">🇫🇴</td>
+        <td class="code">FOK</td>
+        <td>Couronne feroienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 FOK</td>
+      </tr>
+      <tr data-code="ISK" data-search="isk couronne islandaise is">
+        <td class="flag">🇮🇸</td>
+        <td class="code">ISK</td>
+        <td>Couronne islandaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ISK</td>
+      </tr>
+      <tr data-code="NOK" data-search="nok couronne norvegienne no">
+        <td class="flag">🇳🇴</td>
+        <td class="code">NOK</td>
+        <td>Couronne norvegienne</td>
+        <td class="symbol">kr</td>
+        <td class="example">100 NOK</td>
+      </tr>
+      <tr data-code="SEK" data-search="sek couronne suedoise se">
+        <td class="flag">🇸🇪</td>
+        <td class="code">SEK</td>
+        <td>Couronne suedoise</td>
+        <td class="symbol">kr</td>
+        <td class="example">100 SEK</td>
+      </tr>
+      <tr data-code="CZK" data-search="czk couronne tcheque cz">
+        <td class="flag">🇨🇿</td>
+        <td class="code">CZK</td>
+        <td>Couronne tcheque</td>
+        <td class="symbol">Kč</td>
+        <td class="example">100 CZK</td>
+      </tr>
+      <tr data-code="GMD" data-search="gmd dalasi gambien gm">
+        <td class="flag">🇬🇲</td>
+        <td class="code">GMD</td>
+        <td>Dalasi gambien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GMD</td>
+      </tr>
+      <tr data-code="MKD" data-search="mkd denar macedonien mk">
+        <td class="flag">🇲🇰</td>
+        <td class="code">MKD</td>
+        <td>Denar macedonien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MKD</td>
+      </tr>
+      <tr data-code="DZD" data-search="dzd dinar algerien dz">
+        <td class="flag">🇩🇿</td>
+        <td class="code">DZD</td>
+        <td>Dinar algerien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 DZD</td>
+      </tr>
+      <tr data-code="BHD" data-search="bhd dinar bahreini bh">
+        <td class="flag">🇧🇭</td>
+        <td class="code">BHD</td>
+        <td>Dinar bahreini</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BHD</td>
+      </tr>
+      <tr data-code="IQD" data-search="iqd dinar irakien iq">
+        <td class="flag">🇮🇶</td>
+        <td class="code">IQD</td>
+        <td>Dinar irakien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 IQD</td>
+      </tr>
+      <tr data-code="JOD" data-search="jod dinar jordanien jo">
+        <td class="flag">🇯🇴</td>
+        <td class="code">JOD</td>
+        <td>Dinar jordanien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 JOD</td>
+      </tr>
+      <tr data-code="KWD" data-search="kwd dinar koweitien kw">
+        <td class="flag">🇰🇼</td>
+        <td class="code">KWD</td>
+        <td>Dinar koweitien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KWD</td>
+      </tr>
+      <tr data-code="LYD" data-search="lyd dinar libyen ly">
+        <td class="flag">🇱🇾</td>
+        <td class="code">LYD</td>
+        <td>Dinar libyen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LYD</td>
+      </tr>
+      <tr data-code="RSD" data-search="rsd dinar serbe rs">
+        <td class="flag">🇷🇸</td>
+        <td class="code">RSD</td>
+        <td>Dinar serbe</td>
+        <td class="symbol">—</td>
+        <td class="example">100 RSD</td>
+      </tr>
+      <tr data-code="TND" data-search="tnd dinar tunisien tn">
+        <td class="flag">🇹🇳</td>
+        <td class="code">TND</td>
+        <td>Dinar tunisien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TND</td>
+      </tr>
+      <tr data-code="AED" data-search="aed dirham des emirats ae">
+        <td class="flag">🇦🇪</td>
+        <td class="code">AED</td>
+        <td>Dirham des Emirats</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AED</td>
+      </tr>
+      <tr data-code="MAD" data-search="mad dirham marocain ma">
+        <td class="flag">🇲🇦</td>
+        <td class="code">MAD</td>
+        <td>Dirham marocain</td>
+        <td class="symbol">DH</td>
+        <td class="example">100 MAD</td>
+      </tr>
+      <tr data-code="STN" data-search="stn dobra santomeen st">
+        <td class="flag">🇸🇹</td>
+        <td class="code">STN</td>
+        <td>Dobra santomeen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 STN</td>
+      </tr>
+      <tr data-code="USD" data-search="usd dollar americain us">
+        <td class="flag">🇺🇸</td>
+        <td class="code">USD</td>
+        <td>Dollar americain</td>
+        <td class="symbol">$</td>
+        <td class="example">100 USD</td>
+      </tr>
+      <tr data-code="AUD" data-search="aud dollar australien au">
+        <td class="flag">🇦🇺</td>
+        <td class="code">AUD</td>
+        <td>Dollar australien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AUD</td>
+      </tr>
+      <tr data-code="BSD" data-search="bsd dollar bahameen bs">
+        <td class="flag">🇧🇸</td>
+        <td class="code">BSD</td>
+        <td>Dollar bahameen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BSD</td>
+      </tr>
+      <tr data-code="BBD" data-search="bbd dollar barbadien bb">
+        <td class="flag">🇧🇧</td>
+        <td class="code">BBD</td>
+        <td>Dollar barbadien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BBD</td>
+      </tr>
+      <tr data-code="BZD" data-search="bzd dollar belizeen bz">
+        <td class="flag">🇧🇿</td>
+        <td class="code">BZD</td>
+        <td>Dollar belizeen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BZD</td>
+      </tr>
+      <tr data-code="BMD" data-search="bmd dollar bermudien bm">
+        <td class="flag">🇧🇲</td>
+        <td class="code">BMD</td>
+        <td>Dollar bermudien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BMD</td>
+      </tr>
+      <tr data-code="CAD" data-search="cad dollar canadien ca">
+        <td class="flag">🇨🇦</td>
+        <td class="code">CAD</td>
+        <td>Dollar canadien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CAD</td>
+      </tr>
+      <tr data-code="BND" data-search="bnd dollar de brunei bn">
+        <td class="flag">🇧🇳</td>
+        <td class="code">BND</td>
+        <td>Dollar de Brunei</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BND</td>
+      </tr>
+      <tr data-code="HKD" data-search="hkd dollar de hong kong hk">
+        <td class="flag">🇭🇰</td>
+        <td class="code">HKD</td>
+        <td>Dollar de Hong Kong</td>
+        <td class="symbol">—</td>
+        <td class="example">100 HKD</td>
+      </tr>
+      <tr data-code="KID" data-search="kid dollar de kiribati ki">
+        <td class="flag">🇰🇮</td>
+        <td class="code">KID</td>
+        <td>Dollar de Kiribati</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KID</td>
+      </tr>
+      <tr data-code="SGD" data-search="sgd dollar de singapour sg">
+        <td class="flag">🇸🇬</td>
+        <td class="code">SGD</td>
+        <td>Dollar de Singapour</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SGD</td>
+      </tr>
+      <tr data-code="TTD" data-search="ttd dollar de trinite-et-tobago tt">
+        <td class="flag">🇹🇹</td>
+        <td class="code">TTD</td>
+        <td>Dollar de Trinite-et-Tobago</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TTD</td>
+      </tr>
+      <tr data-code="XCD" data-search="xcd dollar des caraibes orientales ag">
+        <td class="flag">🇦🇬</td>
+        <td class="code">XCD</td>
+        <td>Dollar des Caraibes orientales</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XCD</td>
+      </tr>
+      <tr data-code="KYD" data-search="kyd dollar des iles caimans ky">
+        <td class="flag">🇰🇾</td>
+        <td class="code">KYD</td>
+        <td>Dollar des iles Caimans</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KYD</td>
+      </tr>
+      <tr data-code="SBD" data-search="sbd dollar des iles salomon sb">
+        <td class="flag">🇸🇧</td>
+        <td class="code">SBD</td>
+        <td>Dollar des iles Salomon</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SBD</td>
+      </tr>
+      <tr data-code="FJD" data-search="fjd dollar fidjien fj">
+        <td class="flag">🇫🇯</td>
+        <td class="code">FJD</td>
+        <td>Dollar fidjien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 FJD</td>
+      </tr>
+      <tr data-code="GYD" data-search="gyd dollar guyanien gy">
+        <td class="flag">🇬🇾</td>
+        <td class="code">GYD</td>
+        <td>Dollar guyanien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GYD</td>
+      </tr>
+      <tr data-code="JMD" data-search="jmd dollar jamaicain jm">
+        <td class="flag">🇯🇲</td>
+        <td class="code">JMD</td>
+        <td>Dollar jamaicain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 JMD</td>
+      </tr>
+      <tr data-code="LRD" data-search="lrd dollar liberien lr">
+        <td class="flag">🇱🇷</td>
+        <td class="code">LRD</td>
+        <td>Dollar liberien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LRD</td>
+      </tr>
+      <tr data-code="NAD" data-search="nad dollar namibien na">
+        <td class="flag">🇳🇦</td>
+        <td class="code">NAD</td>
+        <td>Dollar namibien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 NAD</td>
+      </tr>
+      <tr data-code="NZD" data-search="nzd dollar neo-zelandais nz">
+        <td class="flag">🇳🇿</td>
+        <td class="code">NZD</td>
+        <td>Dollar neo-zelandais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 NZD</td>
+      </tr>
+      <tr data-code="SRD" data-search="srd dollar surinamais sr">
+        <td class="flag">🇸🇷</td>
+        <td class="code">SRD</td>
+        <td>Dollar surinamais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SRD</td>
+      </tr>
+      <tr data-code="TVD" data-search="tvd dollar tuvaluan tv">
+        <td class="flag">🇹🇻</td>
+        <td class="code">TVD</td>
+        <td>Dollar tuvaluan</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TVD</td>
+      </tr>
+      <tr data-code="ZWL" data-search="zwl dollar zimbabween zw">
+        <td class="flag">🇿🇼</td>
+        <td class="code">ZWL</td>
+        <td>Dollar zimbabween</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ZWL</td>
+      </tr>
+      <tr data-code="VND" data-search="vnd dong vietnamien vn">
+        <td class="flag">🇻🇳</td>
+        <td class="code">VND</td>
+        <td>Dong vietnamien</td>
+        <td class="symbol">₫</td>
+        <td class="example">100 VND</td>
+      </tr>
+      <tr data-code="AMD" data-search="amd dram armenien am">
+        <td class="flag">🇦🇲</td>
+        <td class="code">AMD</td>
+        <td>Dram armenien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AMD</td>
+      </tr>
+      <tr data-code="XDR" data-search="xdr droits de tirage speciaux (fmi) ">
+        <td class="flag">🌐</td>
+        <td class="code">XDR</td>
+        <td>Droits de tirage speciaux (FMI)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XDR</td>
+      </tr>
+      <tr data-code="CVE" data-search="cve escudo cap-verdien cv">
+        <td class="flag">🇨🇻</td>
+        <td class="code">CVE</td>
+        <td>Escudo cap-verdien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CVE</td>
+      </tr>
+      <tr data-code="EUR" data-search="eur euro eu">
+        <td class="flag">🇪🇺</td>
+        <td class="code">EUR</td>
+        <td>Euro</td>
+        <td class="symbol">€</td>
+        <td class="example">100 EUR</td>
+      </tr>
+      <tr data-code="AWG" data-search="awg florin arubais aw">
+        <td class="flag">🇦🇼</td>
+        <td class="code">AWG</td>
+        <td>Florin arubais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AWG</td>
+      </tr>
+      <tr data-code="XCG" data-search="xcg florin caribeen cw">
+        <td class="flag">🇨🇼</td>
+        <td class="code">XCG</td>
+        <td>Florin caribeen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XCG</td>
+      </tr>
+      <tr data-code="ANG" data-search="ang florin des antilles neerlandaises cw">
+        <td class="flag">🇨🇼</td>
+        <td class="code">ANG</td>
+        <td>Florin des Antilles neerlandaises</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ANG</td>
+      </tr>
+      <tr data-code="HUF" data-search="huf forint hongrois hu">
+        <td class="flag">🇭🇺</td>
+        <td class="code">HUF</td>
+        <td>Forint hongrois</td>
+        <td class="symbol">Ft</td>
+        <td class="example">100 HUF</td>
+      </tr>
+      <tr data-code="BIF" data-search="bif franc burundais bi">
+        <td class="flag">🇧🇮</td>
+        <td class="code">BIF</td>
+        <td>Franc burundais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BIF</td>
+      </tr>
+      <tr data-code="XAF" data-search="xaf franc cfa (cemac) cm">
+        <td class="flag">🇨🇲</td>
+        <td class="code">XAF</td>
+        <td>Franc CFA (CEMAC)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XAF</td>
+      </tr>
+      <tr data-code="XOF" data-search="xof franc cfa (uemoa) sn">
+        <td class="flag">🇸🇳</td>
+        <td class="code">XOF</td>
+        <td>Franc CFA (UEMOA)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XOF</td>
+      </tr>
+      <tr data-code="KMF" data-search="kmf franc comorien km">
+        <td class="flag">🇰🇲</td>
+        <td class="code">KMF</td>
+        <td>Franc comorien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KMF</td>
+      </tr>
+      <tr data-code="CDF" data-search="cdf franc congolais cd">
+        <td class="flag">🇨🇩</td>
+        <td class="code">CDF</td>
+        <td>Franc congolais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CDF</td>
+      </tr>
+      <tr data-code="DJF" data-search="djf franc djiboutien dj">
+        <td class="flag">🇩🇯</td>
+        <td class="code">DJF</td>
+        <td>Franc djiboutien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 DJF</td>
+      </tr>
+      <tr data-code="GNF" data-search="gnf franc guineen gn">
+        <td class="flag">🇬🇳</td>
+        <td class="code">GNF</td>
+        <td>Franc guineen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GNF</td>
+      </tr>
+      <tr data-code="XPF" data-search="xpf franc pacifique pf">
+        <td class="flag">🇵🇫</td>
+        <td class="code">XPF</td>
+        <td>Franc pacifique</td>
+        <td class="symbol">—</td>
+        <td class="example">100 XPF</td>
+      </tr>
+      <tr data-code="RWF" data-search="rwf franc rwandais rw">
+        <td class="flag">🇷🇼</td>
+        <td class="code">RWF</td>
+        <td>Franc rwandais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 RWF</td>
+      </tr>
+      <tr data-code="CHF" data-search="chf franc suisse ch">
+        <td class="flag">🇨🇭</td>
+        <td class="code">CHF</td>
+        <td>Franc suisse</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CHF</td>
+      </tr>
+      <tr data-code="HTG" data-search="htg gourde haitienne ht">
+        <td class="flag">🇭🇹</td>
+        <td class="code">HTG</td>
+        <td>Gourde haitienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 HTG</td>
+      </tr>
+      <tr data-code="PYG" data-search="pyg guarani paraguayen py">
+        <td class="flag">🇵🇾</td>
+        <td class="code">PYG</td>
+        <td>Guarani paraguayen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 PYG</td>
+      </tr>
+      <tr data-code="UAH" data-search="uah hryvnia ukrainienne ua">
+        <td class="flag">🇺🇦</td>
+        <td class="code">UAH</td>
+        <td>Hryvnia ukrainienne</td>
+        <td class="symbol">₴</td>
+        <td class="example">100 UAH</td>
+      </tr>
+      <tr data-code="PGK" data-search="pgk kina papou pg">
+        <td class="flag">🇵🇬</td>
+        <td class="code">PGK</td>
+        <td>Kina papou</td>
+        <td class="symbol">—</td>
+        <td class="example">100 PGK</td>
+      </tr>
+      <tr data-code="LAK" data-search="lak kip laotien la">
+        <td class="flag">🇱🇦</td>
+        <td class="code">LAK</td>
+        <td>Kip laotien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LAK</td>
+      </tr>
+      <tr data-code="HRK" data-search="hrk kuna croate hr">
+        <td class="flag">🇭🇷</td>
+        <td class="code">HRK</td>
+        <td>Kuna croate</td>
+        <td class="symbol">—</td>
+        <td class="example">100 HRK</td>
+      </tr>
+      <tr data-code="MWK" data-search="mwk kwacha malawite mw">
+        <td class="flag">🇲🇼</td>
+        <td class="code">MWK</td>
+        <td>Kwacha malawite</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MWK</td>
+      </tr>
+      <tr data-code="ZMW" data-search="zmw kwacha zambien zm">
+        <td class="flag">🇿🇲</td>
+        <td class="code">ZMW</td>
+        <td>Kwacha zambien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ZMW</td>
+      </tr>
+      <tr data-code="AOA" data-search="aoa kwanza angolais ao">
+        <td class="flag">🇦🇴</td>
+        <td class="code">AOA</td>
+        <td>Kwanza angolais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AOA</td>
+      </tr>
+      <tr data-code="MMK" data-search="mmk kyat birman mm">
+        <td class="flag">🇲🇲</td>
+        <td class="code">MMK</td>
+        <td>Kyat birman</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MMK</td>
+      </tr>
+      <tr data-code="GEL" data-search="gel lari georgien ge">
+        <td class="flag">🇬🇪</td>
+        <td class="code">GEL</td>
+        <td>Lari georgien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GEL</td>
+      </tr>
+      <tr data-code="ALL" data-search="all lek albanais al">
+        <td class="flag">🇦🇱</td>
+        <td class="code">ALL</td>
+        <td>Lek albanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ALL</td>
+      </tr>
+      <tr data-code="HNL" data-search="hnl lempira hondurien hn">
+        <td class="flag">🇭🇳</td>
+        <td class="code">HNL</td>
+        <td>Lempira hondurien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 HNL</td>
+      </tr>
+      <tr data-code="SLL" data-search="sll leone sierra-leonais sl">
+        <td class="flag">🇸🇱</td>
+        <td class="code">SLL</td>
+        <td>Leone sierra-leonais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SLL</td>
+      </tr>
+      <tr data-code="SLE" data-search="sle leone sierra-leonais sl">
+        <td class="flag">🇸🇱</td>
+        <td class="code">SLE</td>
+        <td>Leone sierra-leonais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SLE</td>
+      </tr>
+      <tr data-code="MDL" data-search="mdl leu moldave md">
+        <td class="flag">🇲🇩</td>
+        <td class="code">MDL</td>
+        <td>Leu moldave</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MDL</td>
+      </tr>
+      <tr data-code="RON" data-search="ron leu roumain ro">
+        <td class="flag">🇷🇴</td>
+        <td class="code">RON</td>
+        <td>Leu roumain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 RON</td>
+      </tr>
+      <tr data-code="BGN" data-search="bgn lev bulgare bg">
+        <td class="flag">🇧🇬</td>
+        <td class="code">BGN</td>
+        <td>Lev bulgare</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BGN</td>
+      </tr>
+      <tr data-code="SZL" data-search="szl lilangeni swazi sz">
+        <td class="flag">🇸🇿</td>
+        <td class="code">SZL</td>
+        <td>Lilangeni swazi</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SZL</td>
+      </tr>
+      <tr data-code="GIP" data-search="gip livre de gibraltar gi">
+        <td class="flag">🇬🇮</td>
+        <td class="code">GIP</td>
+        <td>Livre de Gibraltar</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GIP</td>
+      </tr>
+      <tr data-code="GGP" data-search="ggp livre de guernesey gg">
+        <td class="flag">🇬🇬</td>
+        <td class="code">GGP</td>
+        <td>Livre de Guernesey</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GGP</td>
+      </tr>
+      <tr data-code="JEP" data-search="jep livre de jersey je">
+        <td class="flag">🇯🇪</td>
+        <td class="code">JEP</td>
+        <td>Livre de Jersey</td>
+        <td class="symbol">—</td>
+        <td class="example">100 JEP</td>
+      </tr>
+      <tr data-code="IMP" data-search="imp livre de l'ile de man im">
+        <td class="flag">🇮🇲</td>
+        <td class="code">IMP</td>
+        <td>Livre de l'ile de Man</td>
+        <td class="symbol">—</td>
+        <td class="example">100 IMP</td>
+      </tr>
+      <tr data-code="SHP" data-search="shp livre de sainte-helene sh">
+        <td class="flag">🇸🇭</td>
+        <td class="code">SHP</td>
+        <td>Livre de Sainte-Helene</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SHP</td>
+      </tr>
+      <tr data-code="FKP" data-search="fkp livre des iles malouines fk">
+        <td class="flag">🇫🇰</td>
+        <td class="code">FKP</td>
+        <td>Livre des iles Malouines</td>
+        <td class="symbol">—</td>
+        <td class="example">100 FKP</td>
+      </tr>
+      <tr data-code="EGP" data-search="egp livre egyptienne eg">
+        <td class="flag">🇪🇬</td>
+        <td class="code">EGP</td>
+        <td>Livre egyptienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 EGP</td>
+      </tr>
+      <tr data-code="LBP" data-search="lbp livre libanaise lb">
+        <td class="flag">🇱🇧</td>
+        <td class="code">LBP</td>
+        <td>Livre libanaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LBP</td>
+      </tr>
+      <tr data-code="SDG" data-search="sdg livre soudanaise sd">
+        <td class="flag">🇸🇩</td>
+        <td class="code">SDG</td>
+        <td>Livre soudanaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SDG</td>
+      </tr>
+      <tr data-code="GBP" data-search="gbp livre sterling gb">
+        <td class="flag">🇬🇧</td>
+        <td class="code">GBP</td>
+        <td>Livre sterling</td>
+        <td class="symbol">£</td>
+        <td class="example">100 GBP</td>
+      </tr>
+      <tr data-code="SSP" data-search="ssp livre sud-soudanaise ss">
+        <td class="flag">🇸🇸</td>
+        <td class="code">SSP</td>
+        <td>Livre sud-soudanaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SSP</td>
+      </tr>
+      <tr data-code="SYP" data-search="syp livre syrienne sy">
+        <td class="flag">🇸🇾</td>
+        <td class="code">SYP</td>
+        <td>Livre syrienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SYP</td>
+      </tr>
+      <tr data-code="TRY" data-search="try livre turque tr">
+        <td class="flag">🇹🇷</td>
+        <td class="code">TRY</td>
+        <td>Livre turque</td>
+        <td class="symbol">₺</td>
+        <td class="example">100 TRY</td>
+      </tr>
+      <tr data-code="LSL" data-search="lsl loti lesothan ls">
+        <td class="flag">🇱🇸</td>
+        <td class="code">LSL</td>
+        <td>Loti lesothan</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LSL</td>
+      </tr>
+      <tr data-code="AZN" data-search="azn manat azerbaidjanais az">
+        <td class="flag">🇦🇿</td>
+        <td class="code">AZN</td>
+        <td>Manat azerbaidjanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 AZN</td>
+      </tr>
+      <tr data-code="TMT" data-search="tmt manat turkmene tm">
+        <td class="flag">🇹🇲</td>
+        <td class="code">TMT</td>
+        <td>Manat turkmene</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TMT</td>
+      </tr>
+      <tr data-code="BAM" data-search="bam mark convertible ba">
+        <td class="flag">🇧🇦</td>
+        <td class="code">BAM</td>
+        <td>Mark convertible</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BAM</td>
+      </tr>
+      <tr data-code="MZN" data-search="mzn metical mozambicain mz">
+        <td class="flag">🇲🇿</td>
+        <td class="code">MZN</td>
+        <td>Metical mozambicain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MZN</td>
+      </tr>
+      <tr data-code="NGN" data-search="ngn naira nigerian ng">
+        <td class="flag">🇳🇬</td>
+        <td class="code">NGN</td>
+        <td>Naira nigerian</td>
+        <td class="symbol">—</td>
+        <td class="example">100 NGN</td>
+      </tr>
+      <tr data-code="ERN" data-search="ern nakfa erythreen er">
+        <td class="flag">🇪🇷</td>
+        <td class="code">ERN</td>
+        <td>Nakfa erythreen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ERN</td>
+      </tr>
+      <tr data-code="BTN" data-search="btn ngultrum bhoutanais bt">
+        <td class="flag">🇧🇹</td>
+        <td class="code">BTN</td>
+        <td>Ngultrum bhoutanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BTN</td>
+      </tr>
+      <tr data-code="TWD" data-search="twd nouveau dollar taiwanais tw">
+        <td class="flag">🇹🇼</td>
+        <td class="code">TWD</td>
+        <td>Nouveau dollar taiwanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TWD</td>
+      </tr>
+      <tr data-code="MRU" data-search="mru ouguiya mauritanien mr">
+        <td class="flag">🇲🇷</td>
+        <td class="code">MRU</td>
+        <td>Ouguiya mauritanien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MRU</td>
+      </tr>
+      <tr data-code="TOP" data-search="top pa'anga tongien to">
+        <td class="flag">🇹🇴</td>
+        <td class="code">TOP</td>
+        <td>Pa'anga tongien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TOP</td>
+      </tr>
+      <tr data-code="MOP" data-search="mop pataca de macao mo">
+        <td class="flag">🇲🇴</td>
+        <td class="code">MOP</td>
+        <td>Pataca de Macao</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MOP</td>
+      </tr>
+      <tr data-code="ARS" data-search="ars peso argentin ar">
+        <td class="flag">🇦🇷</td>
+        <td class="code">ARS</td>
+        <td>Peso argentin</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ARS</td>
+      </tr>
+      <tr data-code="CLP" data-search="clp peso chilien cl">
+        <td class="flag">🇨🇱</td>
+        <td class="code">CLP</td>
+        <td>Peso chilien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CLP</td>
+      </tr>
+      <tr data-code="COP" data-search="cop peso colombien co">
+        <td class="flag">🇨🇴</td>
+        <td class="code">COP</td>
+        <td>Peso colombien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 COP</td>
+      </tr>
+      <tr data-code="CUP" data-search="cup peso cubain cu">
+        <td class="flag">🇨🇺</td>
+        <td class="code">CUP</td>
+        <td>Peso cubain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CUP</td>
+      </tr>
+      <tr data-code="DOP" data-search="dop peso dominicain do">
+        <td class="flag">🇩🇴</td>
+        <td class="code">DOP</td>
+        <td>Peso dominicain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 DOP</td>
+      </tr>
+      <tr data-code="MXN" data-search="mxn peso mexicain mx">
+        <td class="flag">🇲🇽</td>
+        <td class="code">MXN</td>
+        <td>Peso mexicain</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MXN</td>
+      </tr>
+      <tr data-code="PHP" data-search="php peso philippin ph">
+        <td class="flag">🇵🇭</td>
+        <td class="code">PHP</td>
+        <td>Peso philippin</td>
+        <td class="symbol">₱</td>
+        <td class="example">100 PHP</td>
+      </tr>
+      <tr data-code="UYU" data-search="uyu peso uruguayen uy">
+        <td class="flag">🇺🇾</td>
+        <td class="code">UYU</td>
+        <td>Peso uruguayen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 UYU</td>
+      </tr>
+      <tr data-code="BWP" data-search="bwp pula botswanais bw">
+        <td class="flag">🇧🇼</td>
+        <td class="code">BWP</td>
+        <td>Pula botswanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BWP</td>
+      </tr>
+      <tr data-code="GTQ" data-search="gtq quetzal guatemalteque gt">
+        <td class="flag">🇬🇹</td>
+        <td class="code">GTQ</td>
+        <td>Quetzal guatemalteque</td>
+        <td class="symbol">—</td>
+        <td class="example">100 GTQ</td>
+      </tr>
+      <tr data-code="ZAR" data-search="zar rand sud-africain za">
+        <td class="flag">🇿🇦</td>
+        <td class="code">ZAR</td>
+        <td>Rand sud-africain</td>
+        <td class="symbol">R</td>
+        <td class="example">100 ZAR</td>
+      </tr>
+      <tr data-code="BRL" data-search="brl real bresilien br">
+        <td class="flag">🇧🇷</td>
+        <td class="code">BRL</td>
+        <td>Real bresilien</td>
+        <td class="symbol">R$</td>
+        <td class="example">100 BRL</td>
+      </tr>
+      <tr data-code="IRR" data-search="irr rial iranien ir">
+        <td class="flag">🇮🇷</td>
+        <td class="code">IRR</td>
+        <td>Rial iranien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 IRR</td>
+      </tr>
+      <tr data-code="OMR" data-search="omr rial omanais om">
+        <td class="flag">🇴🇲</td>
+        <td class="code">OMR</td>
+        <td>Rial omanais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 OMR</td>
+      </tr>
+      <tr data-code="YER" data-search="yer rial yemenite ye">
+        <td class="flag">🇾🇪</td>
+        <td class="code">YER</td>
+        <td>Rial yemenite</td>
+        <td class="symbol">—</td>
+        <td class="example">100 YER</td>
+      </tr>
+      <tr data-code="KHR" data-search="khr riel cambodgien kh">
+        <td class="flag">🇰🇭</td>
+        <td class="code">KHR</td>
+        <td>Riel cambodgien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KHR</td>
+      </tr>
+      <tr data-code="MYR" data-search="myr ringgit malaisien my">
+        <td class="flag">🇲🇾</td>
+        <td class="code">MYR</td>
+        <td>Ringgit malaisien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MYR</td>
+      </tr>
+      <tr data-code="QAR" data-search="qar riyal qatari qa">
+        <td class="flag">🇶🇦</td>
+        <td class="code">QAR</td>
+        <td>Riyal qatari</td>
+        <td class="symbol">—</td>
+        <td class="example">100 QAR</td>
+      </tr>
+      <tr data-code="SAR" data-search="sar riyal saoudien sa">
+        <td class="flag">🇸🇦</td>
+        <td class="code">SAR</td>
+        <td>Riyal saoudien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SAR</td>
+      </tr>
+      <tr data-code="BYN" data-search="byn rouble bielorusse by">
+        <td class="flag">🇧🇾</td>
+        <td class="code">BYN</td>
+        <td>Rouble bielorusse</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BYN</td>
+      </tr>
+      <tr data-code="RUB" data-search="rub rouble russe ru">
+        <td class="flag">🇷🇺</td>
+        <td class="code">RUB</td>
+        <td>Rouble russe</td>
+        <td class="symbol">₽</td>
+        <td class="example">100 RUB</td>
+      </tr>
+      <tr data-code="INR" data-search="inr roupie indienne in">
+        <td class="flag">🇮🇳</td>
+        <td class="code">INR</td>
+        <td>Roupie indienne</td>
+        <td class="symbol">₹</td>
+        <td class="example">100 INR</td>
+      </tr>
+      <tr data-code="IDR" data-search="idr roupie indonesienne id">
+        <td class="flag">🇮🇩</td>
+        <td class="code">IDR</td>
+        <td>Roupie indonesienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 IDR</td>
+      </tr>
+      <tr data-code="MUR" data-search="mur roupie mauricienne mu">
+        <td class="flag">🇲🇺</td>
+        <td class="code">MUR</td>
+        <td>Roupie mauricienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MUR</td>
+      </tr>
+      <tr data-code="NPR" data-search="npr roupie nepalaise np">
+        <td class="flag">🇳🇵</td>
+        <td class="code">NPR</td>
+        <td>Roupie nepalaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 NPR</td>
+      </tr>
+      <tr data-code="PKR" data-search="pkr roupie pakistanaise pk">
+        <td class="flag">🇵🇰</td>
+        <td class="code">PKR</td>
+        <td>Roupie pakistanaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 PKR</td>
+      </tr>
+      <tr data-code="SCR" data-search="scr roupie seychelloise sc">
+        <td class="flag">🇸🇨</td>
+        <td class="code">SCR</td>
+        <td>Roupie seychelloise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SCR</td>
+      </tr>
+      <tr data-code="LKR" data-search="lkr roupie srilankaise lk">
+        <td class="flag">🇱🇰</td>
+        <td class="code">LKR</td>
+        <td>Roupie srilankaise</td>
+        <td class="symbol">—</td>
+        <td class="example">100 LKR</td>
+      </tr>
+      <tr data-code="MVR" data-search="mvr rufiyaa maldivienne mv">
+        <td class="flag">🇲🇻</td>
+        <td class="code">MVR</td>
+        <td>Rufiyaa maldivienne</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MVR</td>
+      </tr>
+      <tr data-code="ILS" data-search="ils shekel israelien il">
+        <td class="flag">🇮🇱</td>
+        <td class="code">ILS</td>
+        <td>Shekel israelien</td>
+        <td class="symbol">₪</td>
+        <td class="example">100 ILS</td>
+      </tr>
+      <tr data-code="KES" data-search="kes shilling kenyan ke">
+        <td class="flag">🇰🇪</td>
+        <td class="code">KES</td>
+        <td>Shilling kenyan</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KES</td>
+      </tr>
+      <tr data-code="UGX" data-search="ugx shilling ougandais ug">
+        <td class="flag">🇺🇬</td>
+        <td class="code">UGX</td>
+        <td>Shilling ougandais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 UGX</td>
+      </tr>
+      <tr data-code="SOS" data-search="sos shilling somalien so">
+        <td class="flag">🇸🇴</td>
+        <td class="code">SOS</td>
+        <td>Shilling somalien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 SOS</td>
+      </tr>
+      <tr data-code="TZS" data-search="tzs shilling tanzanien tz">
+        <td class="flag">🇹🇿</td>
+        <td class="code">TZS</td>
+        <td>Shilling tanzanien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TZS</td>
+      </tr>
+      <tr data-code="PEN" data-search="pen sol peruvien pe">
+        <td class="flag">🇵🇪</td>
+        <td class="code">PEN</td>
+        <td>Sol peruvien</td>
+        <td class="symbol">—</td>
+        <td class="example">100 PEN</td>
+      </tr>
+      <tr data-code="KGS" data-search="kgs som kirghize kg">
+        <td class="flag">🇰🇬</td>
+        <td class="code">KGS</td>
+        <td>Som kirghize</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KGS</td>
+      </tr>
+      <tr data-code="TJS" data-search="tjs somoni tadjik tj">
+        <td class="flag">🇹🇯</td>
+        <td class="code">TJS</td>
+        <td>Somoni tadjik</td>
+        <td class="symbol">—</td>
+        <td class="example">100 TJS</td>
+      </tr>
+      <tr data-code="UZS" data-search="uzs sum ouzbek uz">
+        <td class="flag">🇺🇿</td>
+        <td class="code">UZS</td>
+        <td>Sum ouzbek</td>
+        <td class="symbol">—</td>
+        <td class="example">100 UZS</td>
+      </tr>
+      <tr data-code="BDT" data-search="bdt taka bangladais bd">
+        <td class="flag">🇧🇩</td>
+        <td class="code">BDT</td>
+        <td>Taka bangladais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 BDT</td>
+      </tr>
+      <tr data-code="WST" data-search="wst tala samoan ws">
+        <td class="flag">🇼🇸</td>
+        <td class="code">WST</td>
+        <td>Tala samoan</td>
+        <td class="symbol">—</td>
+        <td class="example">100 WST</td>
+      </tr>
+      <tr data-code="KZT" data-search="kzt tenge kazakh kz">
+        <td class="flag">🇰🇿</td>
+        <td class="code">KZT</td>
+        <td>Tenge kazakh</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KZT</td>
+      </tr>
+      <tr data-code="MNT" data-search="mnt tugrik mongol mn">
+        <td class="flag">🇲🇳</td>
+        <td class="code">MNT</td>
+        <td>Tugrik mongol</td>
+        <td class="symbol">—</td>
+        <td class="example">100 MNT</td>
+      </tr>
+      <tr data-code="CLF" data-search="clf unite de compte chilienne (uf) cl">
+        <td class="flag">🇨🇱</td>
+        <td class="code">CLF</td>
+        <td>Unite de compte chilienne (UF)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CLF</td>
+      </tr>
+      <tr data-code="VUV" data-search="vuv vatu vanuatais vu">
+        <td class="flag">🇻🇺</td>
+        <td class="code">VUV</td>
+        <td>Vatu vanuatais</td>
+        <td class="symbol">—</td>
+        <td class="example">100 VUV</td>
+      </tr>
+      <tr data-code="KPW" data-search="kpw won nord-coreen kp">
+        <td class="flag">🇰🇵</td>
+        <td class="code">KPW</td>
+        <td>Won nord-coreen</td>
+        <td class="symbol">—</td>
+        <td class="example">100 KPW</td>
+      </tr>
+      <tr data-code="KRW" data-search="krw won sud-coreen kr">
+        <td class="flag">🇰🇷</td>
+        <td class="code">KRW</td>
+        <td>Won sud-coreen</td>
+        <td class="symbol">₩</td>
+        <td class="example">100 KRW</td>
+      </tr>
+      <tr data-code="JPY" data-search="jpy yen japonais jp">
+        <td class="flag">🇯🇵</td>
+        <td class="code">JPY</td>
+        <td>Yen japonais</td>
+        <td class="symbol">¥</td>
+        <td class="example">100 JPY</td>
+      </tr>
+      <tr data-code="CNY" data-search="cny yuan chinois cn">
+        <td class="flag">🇨🇳</td>
+        <td class="code">CNY</td>
+        <td>Yuan chinois</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CNY</td>
+      </tr>
+      <tr data-code="CNH" data-search="cnh yuan offshore (cnh) cn">
+        <td class="flag">🇨🇳</td>
+        <td class="code">CNH</td>
+        <td>Yuan offshore (CNH)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 CNH</td>
+      </tr>
+      <tr data-code="ZWG" data-search="zwg zimbabwe gold (zig) zw">
+        <td class="flag">🇿🇼</td>
+        <td class="code">ZWG</td>
+        <td>Zimbabwe Gold (ZiG)</td>
+        <td class="symbol">—</td>
+        <td class="example">100 ZWG</td>
+      </tr>
+      <tr data-code="PLN" data-search="pln zloty polonais pl">
+        <td class="flag">🇵🇱</td>
+        <td class="code">PLN</td>
+        <td>Zloty polonais</td>
+        <td class="symbol">zł</td>
+        <td class="example">100 PLN</td>
+      </tr>
+  </tbody>
+</table>
+
+<p class="empty" id="empty" hidden>Aucune devise ne correspond à ce filtre.</p>
+
+<script>
+  (function () {
+    var input = document.getElementById('filter');
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#rows tr'));
+    var count = document.getElementById('count');
+    var empty = document.getElementById('empty');
+
+    input.addEventListener('input', function () {
+      var needle = input.value.trim().toLowerCase();
+      var visible = 0;
+      for (var index = 0; index < rows.length; index += 1) {
+        var row = rows[index];
+        var match = needle === '' || row.getAttribute('data-search').indexOf(needle) !== -1;
+        row.hidden = !match;
+        if (match) {
+          visible += 1;
+        }
+      }
+      count.textContent = visible + ' devise' + (visible === 1 ? '' : 's');
+      empty.hidden = visible !== 0;
+    });
+  })();
+</script>
+
+</body>
+</html>

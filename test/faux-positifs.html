@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   UniConv — test/faux-positifs.html
+   ============================================================================
+
+   ROLE DE CE FICHIER
+   ------------------
+   Verifier l'iteration 7 : l'extension doit rester SILENCIEUSE devant les
+   nombres qui ne sont pas des montants (numeros de page, versions, heures,
+   adresses IP, dimensions...).
+
+   COMMENT S'EN SERVIR
+   -------------------
+   1. Servir le dossier en http (voir docs/TESTS.md).
+   2. Ouvrir : http://localhost:8123/test/faux-positifs.html
+   3. Parcourir la page de haut en bas.
+
+   ATTENDU, SECTION 1 (les pieges) : AUCUN soulignement, AUCUNE bulle.
+   ATTENDU, SECTION 2 (les vrais prix) : soulignement + bulle, comme avant.
+
+   Si un piege est converti, noter son NUMERO : c'est ce numero qui permet de
+   retrouver la regle fautive dans src/content.js.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>UniConv — page de test des faux positifs</title>
+  <style>
+    body {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #111827;
+      background: #ffffff;
+    }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 17px; margin: 34px 0 8px; padding-top: 12px; border-top: 1px solid #e5e7eb; }
+    h3 { font-size: 14px; margin: 20px 0 6px; color: #374151; }
+    .intro { color: #4b5563; font-size: 14px; margin: 0 0 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+    th, td { padding: 7px 10px; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; font-weight: 600; }
+    td.num { width: 46px; color: #9ca3af; font-variant-numeric: tabular-nums; }
+    td.text { width: 45%; }
+    td.reason { color: #6b7280; font-size: 13px; }
+    .note { padding: 10px 12px; border-left: 3px solid #2f6bff; background: #f4f7ff; font-size: 13px; }
+    .ok { padding: 10px 12px; border-left: 3px solid #1a7f37; background: #f0fdf4; font-size: 13px; }
+    .warn { padding: 10px 12px; border-left: 3px solid #d97706; background: #fffbeb; font-size: 13px; }
+    code { padding: 1px 5px; border-radius: 3px; background: #f3f4f6;
+           font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+    kbd {
+      padding: 1px 5px; border: 1px solid #d8dde5; border-bottom-width: 2px;
+      border-radius: 4px; background: #ffffff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    }
+  </style>
+  <link rel="stylesheet" href="test-nav.css">
+</head>
+<body>
+<nav class="test-nav" aria-label="Pages de test">
+  <span class="test-nav-title">UniConv · tests</span>
+  <a href="formats.html">Formats</a>
+  <a href="monnaies.html">Monnaies</a>
+  <a href="faux-positifs.html" aria-current="page">Faux positifs</a>
+  <a href="dynamique.html">Dynamique</a>
+  <a href="fuseaux.html">Fuseaux</a>
+</nav>
+
+
+  <h1>UniConv — faux positifs</h1>
+  <p class="intro">
+    Iteration 7 : ne convertir que ce qui est vraiment un montant. Cette page
+    contient <strong>63 pieges</strong> et <strong>13 vrais prix</strong>.
+  </p>
+
+  <p class="ok">
+    <strong>Objectif :</strong> dans la section 1, aucun nombre ne doit etre
+    souligne ni ouvrir de bulle. Dans la section 2, tous les prix doivent
+    fonctionner comme avant.
+  </p>
+
+  <p class="note">
+    <strong>Rappel :</strong> l&rsquo;extension peut etre suspendue a tout
+    moment avec la case <strong>« Activer la detection »</strong> du popup.
+    L&rsquo;icone
+    affiche alors <strong>OFF</strong>. C&rsquo;est pratique pour comparer une
+    page avec et sans UniConv.
+  </p>
+
+  <!-- ======================================================================
+       SECTION 1 — LES PIEGES
+       ====================================================================== -->
+  <h2>1. Les pieges (aucune conversion attendue)</h2>
+
+  <h3>1.1 Numeros de version</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi ce n&rsquo;est pas un montant</th></tr>
+    <tr><td class="num">1</td><td class="text">Version 2.0.1 disponible</td><td class="reason">numero de version</td></tr>
+    <tr><td class="num">2</td><td class="text">Mise a jour v1.2.3 EUR</td><td class="reason">version suivie d&rsquo;un code</td></tr>
+    <tr><td class="num">3</td><td class="text">Correctif 10.0.2 EUR</td><td class="reason">version</td></tr>
+    <tr><td class="num">4</td><td class="text">build 4.2.1 EUR</td><td class="reason">mot-cle « build »</td></tr>
+    <tr><td class="num">5</td><td class="text">rev. 3.1 EUR</td><td class="reason">revision</td></tr>
+    <tr><td class="num">6</td><td class="text">1.2.3 EUR</td><td class="reason">version nue</td></tr>
+  </table>
+
+  <h3>1.2 Heures et horaires</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">7</td><td class="text">Il est 12h30</td><td class="reason">heure francaise</td></tr>
+    <tr><td class="num">8</td><td class="text">Rendez-vous a 12:30</td><td class="reason">heure avec deux-points</td></tr>
+    <tr><td class="num">9</td><td class="text">Ouvert de 9 h a 17 h</td><td class="reason">horaires</td></tr>
+    <tr><td class="num">10</td><td class="text">Le train part a 08h05</td><td class="reason">heure de depart</td></tr>
+  </table>
+
+  <h3>1.3 Dates</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">11</td><td class="text">Le 12/10/2025, reunion</td><td class="reason">date francaise</td></tr>
+    <tr><td class="num">12</td><td class="text">Date de sortie : 2025-10-12</td><td class="reason">date ISO</td></tr>
+    <tr><td class="num">13</td><td class="text">Paru le 02.11.2024</td><td class="reason">date allemande</td></tr>
+  </table>
+
+  <h3>1.4 Plages, ratios, pourcentages</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">14</td><td class="text">Entre 10-20 pages de budget</td><td class="reason">plage sans devise</td></tr>
+    <tr><td class="num">15</td><td class="text">Fourchette de 5&ndash;10 chapitres</td><td class="reason">plage sans devise (tiret cadratin)</td></tr>
+    <tr><td class="num">16</td><td class="text">Ratio de 3:1 EUR</td><td class="reason">ratio</td></tr>
+    <tr><td class="num">17</td><td class="text">Note de 4,5/5 EUR</td><td class="reason">note sur cinq</td></tr>
+    <tr><td class="num">18</td><td class="text">Remise de 10 % EUR</td><td class="reason">pourcentage</td></tr>
+    <tr><td class="num">19</td><td class="text">Taux de 1,5 % EUR</td><td class="reason">pourcentage</td></tr>
+  </table>
+
+  <h3>1.5 Telephones et adresses techniques</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">20</td><td class="text">+33 6 12 34 56 78</td><td class="reason">telephone international</td></tr>
+    <tr><td class="num">21</td><td class="text">06.12.34.56.78</td><td class="reason">telephone francais</td></tr>
+    <tr><td class="num">22</td><td class="text">Appelez le 01 23 45 67 89</td><td class="reason">telephone</td></tr>
+    <tr><td class="num">23</td><td class="text">(555) 123-4567 EUR</td><td class="reason">telephone americain</td></tr>
+    <tr><td class="num">24</td><td class="text">Serveur 192.168.1.1 EUR</td><td class="reason">adresse IP</td></tr>
+    <tr><td class="num">25</td><td class="text">Passerelle 10.0.0.1</td><td class="reason">adresse IP privee</td></tr>
+    <tr><td class="num">26</td><td class="text">Fuseau GMT+2 EUR</td><td class="reason">fuseau horaire</td></tr>
+  </table>
+
+  <h3>1.6 Normes, references, identifiants</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">27</td><td class="text">Certifie ISO 9001</td><td class="reason">norme</td></tr>
+    <tr><td class="num">28</td><td class="text">Norme EN 1234 EUR</td><td class="reason">norme europeenne</td></tr>
+    <tr><td class="num">29</td><td class="text">ref. 1234 EUR</td><td class="reason">reference de commande</td></tr>
+    <tr><td class="num">30</td><td class="text">REF 4500 EUR</td><td class="reason">reference en majuscules</td></tr>
+    <tr><td class="num">31</td><td class="text">modele 2500 EUR</td><td class="reason">numero de modele</td></tr>
+    <tr><td class="num">32</td><td class="text">ISBN 978-2-07-0414</td><td class="reason">ISBN</td></tr>
+    <tr><td class="num">33</td><td class="text">SKU 12345 EUR</td><td class="reason">identifiant produit</td></tr>
+    <tr><td class="num">34</td><td class="text">Vague COVID-19 EUR</td><td class="reason">nom de maladie</td></tr>
+    <tr><td class="num">35</td><td class="text">Souche H1N1</td><td class="reason">souche de virus</td></tr>
+    <tr><td class="num">36</td><td class="text">Ticket #1234 EUR</td><td class="reason">numero de ticket</td></tr>
+    <tr><td class="num">37</td><td class="text">Article L123-4 EUR</td><td class="reason">reference legislative</td></tr>
+  </table>
+
+  <h3>1.7 Numerotation</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">38</td><td class="text">Voir page 12</td><td class="reason">numero de page</td></tr>
+    <tr><td class="num">39</td><td class="text">Chapitre 10 EUR</td><td class="reason">numero de chapitre</td></tr>
+    <tr><td class="num">40</td><td class="text">Figure 3 EUR</td><td class="reason">numero de figure</td></tr>
+    <tr><td class="num">41</td><td class="text">n° 45 EUR</td><td class="reason">numero</td></tr>
+    <tr><td class="num">42</td><td class="text">Section 2 EUR</td><td class="reason">numero de section</td></tr>
+    <tr><td class="num">43</td><td class="text">Tome 1 EUR</td><td class="reason">numero de tome</td></tr>
+    <tr><td class="num">44</td><td class="text">Au 3e etage, 12 personnes</td><td class="reason">numero d&rsquo;etage</td></tr>
+    <tr><td class="num">45</td><td class="text">Question 7 EUR</td><td class="reason">numero de question</td></tr>
+  </table>
+
+  <h3>1.8 Dimensions, resolutions, codes</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">46</td><td class="text">Ecran 1920x1080</td><td class="reason">resolution</td></tr>
+    <tr><td class="num">47</td><td class="text">Carton 10x20x30 EUR</td><td class="reason">dimensions</td></tr>
+    <tr><td class="num">48</td><td class="text">Charge 1000 kg/m2 EUR</td><td class="reason">contrainte technique</td></tr>
+    <tr><td class="num">49</td><td class="text">Code postal 75001 Paris</td><td class="reason">code postal</td></tr>
+    <tr><td class="num">50</td><td class="text">Adresse SW1A 1AA</td><td class="reason">code postal britannique</td></tr>
+    <tr><td class="num">51</td><td class="text">Valeur 0x1F EUR</td><td class="reason">nombre hexadecimal</td></tr>
+    <tr><td class="num">52</td><td class="text">Fichier de 1,5 Go</td><td class="reason">taille de fichier</td></tr>
+    <tr><td class="num">53</td><td class="text">Volume 250 Mo EUR</td><td class="reason">taille de fichier</td></tr>
+  </table>
+
+  <h3>1.9 Unites pieges</h3>
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Pourquoi</th></tr>
+    <tr><td class="num">54</td><td class="text">Budget de 12 m de haut</td><td class="reason">une longueur, pas un montant</td></tr>
+    <tr><td class="num">55</td><td class="text">50 K abonnes</td><td class="reason">« K » = milliers, pas des kelvins</td></tr>
+    <tr><td class="num">56</td><td class="text">Studio de 10 m&sup2;</td><td class="reason">une surface, pas une longueur</td></tr>
+    <tr><td class="num">57</td><td class="text">Piece de 10 m x 12 m</td><td class="reason">des dimensions</td></tr>
+    <tr><td class="num">58</td><td class="text">1st prix du concours</td><td class="reason">ordinal anglais</td></tr>
+    <tr><td class="num">59</td><td class="text">10 in the box</td><td class="reason">« in » est un mot, pas des pouces</td></tr>
+    <tr><td class="num">60</td><td class="text">1,2 M de vues</td><td class="reason">« M » = millions</td></tr>
+    <tr><td class="num">61</td><td class="text">unreal engine is source-available</td><td class="reason">« un real » sans espace n&rsquo;est pas un r&eacute;al br&eacute;silien</td></tr>
+    <tr><td class="num">62</td><td class="text">50 K abonnés</td><td class="reason">« K » = milliers, pas kelvin</td></tr>
+    <tr><td class="num">63</td><td class="text">50K vues</td><td class="reason">« K » collé = milliers</td></tr>
+  </table>
+
+  <!-- ======================================================================
+       SECTION 2 — LES VRAIS PRIX (non-regression)
+       ====================================================================== -->
+  <h2>2. Les vrais prix (conversion attendue)</h2>
+
+  <p class="ok">
+    <strong>Ces lignes doivent continuer a fonctionner.</strong> Une regle
+    anti-faux-positif qui bloque un vrai prix est un bogue plus grave que le
+    faux positif qu&rsquo;elle corrige.
+  </p>
+
+  <table>
+    <tr><th>#</th><th class="text">Texte sur la page</th><th>Attendu</th></tr>
+    <tr><td class="num">1</td><td class="text">Prix : 10 &euro;</td><td class="reason">converti</td></tr>
+    <tr><td class="num">2</td><td class="text">Article a 10 &euro; seulement</td><td class="reason">converti</td></tr>
+    <tr><td class="num">3</td><td class="text">Le prix est de 250 &euro; TTC</td><td class="reason">converti</td></tr>
+    <tr><td class="num">4</td><td class="text">Facture du 12/10/2025 : 149,90 &euro;</td><td class="reason">la date est ignoree, le prix converti</td></tr>
+    <tr><td class="num">5</td><td class="text">Ouvert de 9 h a 17 h, entree 8 &euro;</td><td class="reason">l&rsquo;horaire est ignore, le prix converti</td></tr>
+    <tr><td class="num">6</td><td class="text">Certifie ISO 9001, audit a 1 200 &euro;</td><td class="reason">la norme est ignoree, le prix converti</td></tr>
+    <tr><td class="num">7</td><td class="text">Page 12, abonnement a 9,99 &euro; par mois</td><td class="reason">converti</td></tr>
+    <tr><td class="num">8</td><td class="text">Remise de 10 %, soit 4,50 &euro; de moins</td><td class="reason">converti</td></tr>
+    <tr><td class="num">9</td><td class="text">Version 2.0 disponible pour 79 &euro;</td><td class="reason">converti</td></tr>
+    <tr><td class="num">10</td><td class="text">De 5 &euro; &agrave; 10 &euro; seulement</td><td class="reason">les DEUX prix sont convertis</td></tr>
+    <tr><td class="num">11</td><td class="text">Prix : 10 &euro; - 20 &euro;</td><td class="reason">les DEUX prix sont convertis</td></tr>
+    <tr><td class="num">12</td><td class="text">Prix au format allemand : 1.234.567,89 &euro;</td><td class="reason">converti (1 234 567,89)</td></tr>
+    <tr><td class="num">13</td><td class="text">Budget de 12 m&euro;</td><td class="reason">12 millions d&rsquo;euros (m = million)</td></tr>
+  </table>
+
+  <!-- ======================================================================
+       SECTION 3 — PAUSE ET LISTE NOIRE
+       ====================================================================== -->
+  <h2>3. Pause et liste noire</h2>
+
+  <p class="note">
+    <strong>Le raccourci :</strong> appuyez sur <kbd>Alt</kbd> + <kbd>Maj</kbd>
+    + <kbd>U</kbd>. Tous les soulignements doivent disparaitre, l&rsquo;icone
+    doit afficher <strong>OFF</strong>, et plus aucune bulle ne doit
+    apparaitre au survol. Appuyez a nouveau : tout revient.
+  </p>
+
+  <p class="note">
+    <strong>Le popup :</strong> cliquez sur l&rsquo;icone. Un bloc
+    <em>Detection</em> affiche l&rsquo;etat et propose de suspendre ou de
+    reactiver. Le meme bouton sert aux deux sens.
+  </p>
+
+  <p class="warn">
+    <strong>La liste noire :</strong> les boites mail, les editeurs de code et
+    les agendas (<code>mail.google.com</code>, <code>github.com</code>,
+    <code>notion.so</code>...) ne sont jamais analyses. Cette page de test
+    n&rsquo;est pas concernee : vous devez donc voir fonctionner la section 2.
+  </p>
+
+  <h3>Verifier la liste noire sans quitter cette page</h3>
+
+  <p class="intro">
+    La liste noire est un reglage. Pour l&rsquo;essayer, il faudrait ouvrir une
+    adresse reellement exclue (par exemple <code>github.com</code>) et
+    constater qu&rsquo;aucun montant n&rsquo;y est souligne. Le test automatique
+    couvre deja ce cas : <code>node tools/dynamic-tests.mjs</code>.
+  </p>
+
+  <p class="note">
+    <strong>Ou voir le detail :</strong> ouvrez le popup apres avoir charge
+    cette page. La ligne <em>Derniere page analysee</em> indique combien de
+    nombres ont ete ecartes, et pourquoi
+    (« 9 nombres ecartes : numerotations, versions, dates… »).
+  </p>
+
+</body>
+</html>
