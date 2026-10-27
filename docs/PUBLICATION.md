@@ -19,6 +19,32 @@ soumission à Firefox (AMO) et à Chrome, et le processus de mise à jour.
 
 ---
 
+## 1bis. Comptes et coûts des stores
+
+| Store | Compte à créer | Coût | Lien |
+|---|---|---|---|
+| Firefox / AMO | Compte Mozilla | **Gratuit** | <https://addons.mozilla.org/developers/> |
+| Chrome Web Store | Compte Google + développeur | **5 $ US une fois** | <https://chrome.google.com/webstore/devconsole> |
+| Microsoft Edge Add-ons | Compte Microsoft + Partner Center | **Gratuit** | <https://partner.microsoft.com/dashboard/microsoftedge/overview> |
+| Opera Add-ons | Compte Opera | **Gratuit** | <https://addons.opera.com/developer/> |
+| Safari / App Store | Apple Developer Program | **99 $ US/an** | <https://developer.apple.com/programs/> |
+| GitHub | Compte GitHub | **Gratuit** | <https://github.com/> |
+| Ko-fi (optionnel) | Compte Ko-fi | **Gratuit** | <https://ko-fi.com/> |
+
+- **Brave et Vivaldi** n'ont pas de store propre : ils passent par le Chrome
+  Web Store (donc le compte Chrome à 5 $).
+- Les frais Chrome sont **uniques** et liés au compte Google utilisé ; utiliser
+  un compte durable, car l'adresse ne se change pas facilement ensuite.
+- Apple facture l'adhésion **chaque année** ; les tests locaux dans Xcode
+  peuvent se faire avec un compte Apple, mais la distribution App Store exige
+  l'adhésion payante.
+- Les prix peuvent inclure la TVA/locale ; prévoir une carte bancaire.
+- Total indicatif : **5 $ la première année si tu commences par Chrome**, ou
+  **104 $ la première année** si tu ajoutes Apple. Renouvellement Apple :
+  **99 $/an**.
+- Les stores ne facturent pas la soumission ni la review. Une politique de
+  confidentialité peut être hébergée gratuitement sur GitHub Pages.
+
 ## 2. Fabriquer les archives
 
 ```bash
