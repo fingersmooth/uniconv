@@ -237,7 +237,7 @@ Itérations 0 à 29 livrées. **L'OCR automatique a été entièrement supprimé
 manuelle par le bouton **Scan** reste, plus économe. Voir
 [`docs/REPRISE-DE-SESSION.md`](docs/REPRISE-DE-SESSION.md).
 
-Licence : à définir avant publication.
+Licence : **MIT** — voir [LICENSE](LICENSE).
 
 
 ## Installation gratuite (aucun compte payant)

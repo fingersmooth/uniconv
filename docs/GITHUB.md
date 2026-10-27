@@ -119,9 +119,9 @@ Les binaires restent ainsi hors du dépôt Git, mais téléchargeables.
 
 ## 4. Licence
 
-Ajouter un fichier `LICENSE` (MIT, GPL-3.0, MPL-2.0…). Sans licence, les
-autres personnes n'ont pas le droit de réutiliser le code. Le choix de la
-licence t'appartient ; ne pas en ajouter une sans décision explicite.
+Le fichier `LICENSE` est déjà présent : **MIT**. GitHub le détecte automatiquement
+dans l'en-tête du dépôt. Si tu changes de licence, remplace ce fichier et mets
+à jour la fiche AMO.
 
 ## 5. Secrets et signature
 

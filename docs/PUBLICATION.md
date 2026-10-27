@@ -14,7 +14,7 @@ soumission à Firefox (AMO) et à Chrome, et le processus de mise à jour.
 - [ ] Une seule extension « UniConv » dans `about:debugging` (pas de fantôme).
 - [ ] Test manuel sur un profil neuf : devises, unités, fuseaux, OCR manuel.
 - [ ] `docs/CONFIDENTIALITE.md` à jour.
-- [ ] Licence choisie (à définir) et ajoutée au `README.md`.
+- [x] Licence **MIT** ajoutée (`LICENSE`) et déclarée dans AMO.
 - [ ] Captures d'écran préparées (voir § 5).
 
 ---

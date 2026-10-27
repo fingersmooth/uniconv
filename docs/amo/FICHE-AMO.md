@@ -75,3 +75,7 @@ Le paquet Firefox 2.9.9 :
 
 - ne contient **pas** `background.service_worker` ;
 - cible Firefox **142+**, compatible `data_collection_permissions`.
+
+## Licence à déclarer dans AMO
+
+**MIT** — le fichier `LICENSE` est à la racine du dépôt.
