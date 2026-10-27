@@ -240,6 +240,20 @@ manuelle par le bouton **Scan** reste, plus économe. Voir
 Licence : à définir avant publication.
 
 
+## Installation gratuite (aucun compte payant)
+
+| Navigateur | Paquet | Statut |
+|---|---|---|
+| **Firefox** | `uniconv-<version>.xpi` (Release GitHub) | signé par AMO, un clic |
+| **Microsoft Edge** | `uniconv-<version>-chromium.zip` | Edge Add-ons |
+| **Opera** | `uniconv-<version>-chromium.zip` | Opera Add-ons |
+| **Chrome, Brave, Vivaldi** | `uniconv-<version>-chromium.zip` | **mode développeur** (`chrome://extensions`) |
+| **Safari** | non pris en charge | compte Apple payant requis |
+
+Pour Chrome/Brave/Vivaldi sans store : dézipper le ZIP dans un dossier permanent,
+puis `chrome://extensions` → **mode développeur** → **Charger l'extension non
+empaquetée**. Pas de mise à jour automatique.
+
 ## Mettre le code sur GitHub
 
 Voir [docs/GITHUB.md](docs/GITHUB.md).

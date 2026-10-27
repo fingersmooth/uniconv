@@ -45,6 +45,32 @@ soumission à Firefox (AMO) et à Chrome, et le processus de mise à jour.
 - Les stores ne facturent pas la soumission ni la review. Une politique de
   confidentialité peut être hébergée gratuitement sur GitHub Pages.
 
+## 1ter. Stratégie « comptes gratuits uniquement »
+
+Objectif : **0 €**. Publier sur Firefox, Edge et Opera ; Chrome et Safari
+restent optionnels et payants.
+
+| Étape | Action | Coût |
+|---|---|---|
+| 1 | Firefox / AMO : compte gratuit + `.xpi` signé | 0 € |
+| 2 | Edge Add-ons : compte Microsoft gratuit + ZIP Chromium | 0 € |
+| 3 | Opera Add-ons : compte gratuit + ZIP Chromium | 0 € |
+| 4 | Chrome Web Store (optionnel, 5 $ une fois) | 5 $ |
+| 5 | Safari / App Store (optionnel, 99 $/an) | 99 $/an |
+
+### Conséquences à connaître
+
+- **Firefox** obtient la version **signée** : installation en un clic pour les
+  utilisateurs.
+- **Edge et Opera** obtiennent la version **officielle** et signée par leur
+  store.
+- **Chrome, Brave et Vivaldi** n'ont pas d'entrée officielle : les utilisateurs
+  peuvent installer par **mode développeur** (dossier dézippé). La technique est
+  documentée dans le README, mais elle est moins rassurante.
+- **Safari** reste hors périmètre.
+
+Voir aussi `## 4. Chromium` et `## 6. Installer sans store`.
+
 ## 2. Fabriquer les archives
 
 ```bash
@@ -166,6 +192,21 @@ Safari exige un **projet Xcode** : Apple ne distribue pas d'extension seule.
 - **Bannière** : 1200×630 pour la fiche.
 
 ---
+
+## 6. Installer sans store
+
+Pour Chrome / Brave / Vivaldi, sans compte payant :
+
+1. Télécharger `uniconv-<version>-chromium.zip` depuis la Release GitHub.
+2. Le dézipper dans un dossier permanent.
+3. Ouvrir `chrome://extensions`, activer le **mode développeur**.
+4. **Charger l'extension non empaquetée** → choisir le dossier.
+
+Pour Edge, la même procédure avec `edge://extensions` fonctionne aussi, mais
+Edge Add-ons reste préférable (mise à jour automatique).
+
+Limite : sans store, pas de mise à jour automatique ; l'utilisateur doit
+retélécharger une nouvelle version.
 
 ## 6. Mettre à jour
 
