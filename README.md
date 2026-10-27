@@ -254,6 +254,10 @@ Pour Chrome/Brave/Vivaldi sans store : dézipper le ZIP dans un dossier permanen
 puis `chrome://extensions` → **mode développeur** → **Charger l'extension non
 empaquetée**. Pas de mise à jour automatique.
 
+## Source de publication AMO
+
+Voir [AMO-SOURCE.md](AMO-SOURCE.md) pour reproduire le paquet Firefox.
+
 ## Mettre le code sur GitHub
 
 Voir [docs/GITHUB.md](docs/GITHUB.md).
