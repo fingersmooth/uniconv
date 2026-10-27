@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniConv — Politique de confidentialité</title>
+  <style>
+    :root { color-scheme: light; --ink:#0f172a; --muted:#475569; --line:#dbe3ef; --bg:#f8fafc; --accent:#1d4ed8; }
+    * { box-sizing: border-box; }
+    body { margin:0; padding:32px 20px; background:var(--bg); color:var(--ink);
+      font:15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 760px; margin: 0 auto; background:#fff; border:1px solid var(--line);
+      border-radius:10px; padding:32px 28px; box-shadow:0 2px 10px rgba(15,23,42,.05); }
+    h1 { margin:0 0 6px; font-size:26px; }
+    h2 { margin:28px 0 8px; font-size:18px; border-bottom:2px solid var(--line); padding-bottom:6px; }
+    .meta { color:var(--muted); font-size:13px; margin:0 0 18px; }
+    ul { padding-left: 20px; }
+    li { margin: 4px 0; }
+    code { background:#f1f5f9; padding:1px 5px; border-radius:4px;
+      font:13px ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap:anywhere; }
+    .summary { background:#eef3ff; border:1px solid #c7d7ff; border-radius:8px; padding:14px 16px; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Politique de confidentialité — UniConv</h1>
+  <p class="meta">Dernière mise à jour : 27 octobre 2026 · Version 2.9.8</p>
+
+  <p class="summary"><strong>En résumé :</strong> UniConv ne collecte aucune donnée.
+  Pas de compte, pas de télémétrie, pas d'analyse d'usage, pas de publicité,
+  pas de revente.</p>
+
+  <h2>Ce qui reste sur votre appareil</h2>
+  <p>Dans le stockage local du navigateur (<code>chrome.storage.local</code>) :</p>
+  <ul>
+    <li>vos réglages (devise de référence, unités, langue, thème, délai, sites exclus, ville de référence, format d'heure, devises et villes épinglées) ;</li>
+    <li>le cache des taux de change (12 heures) et la date du dernier essai ;</li>
+    <li>des compteurs techniques anonymes (blocs analysés, vitesse du détecteur), affichés dans le popup.</li>
+  </ul>
+  <p>Ces données ne quittent jamais l'appareil et disparaissent avec l'extension.</p>
+
+  <h2>Ce qui sort de l'appareil</h2>
+  <p>Pour afficher des taux réels, l'extension interroge quatre services publics
+  de taux, sans clé d'accès :</p>
+  <ul>
+    <li><code>https://api.frankfurter.dev/v1/latest?base=EUR</code></li>
+    <li><code>https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json</code></li>
+    <li><code>https://latest.currency-api.pages.dev/v1/currencies/eur.json</code></li>
+    <li><code>https://open.er-api.com/v6/latest/EUR</code></li>
+    <li><code>https://api.exchangerate-api.com/v4/latest/EUR</code></li>
+  </ul>
+  <p>Ces requêtes ne contiennent que la devise de base. Aucun texte de page,
+  aucune adresse visitée, aucun identifiant ne leur est transmis. Comme pour
+  toute requête web, ces services voient l'adresse IP de l'appareil et peuvent
+  la journaliser selon leurs propres politiques.</p>
+  <p><strong>Aucune autre requête réseau n'est faite.</strong> En particulier :</p>
+  <ul>
+    <li>le moteur OCR (Tesseract, 8,2 Mo) est embarqué : les images analysées ne sont jamais envoyées ;</li>
+    <li>aucune police, icône ou script n'est chargé depuis un CDN.</li>
+  </ul>
+
+  <h2>Ce qui n'est pas collecté</h2>
+  <ul>
+    <li>aucune donnée personnelle (nom, e-mail, compte) ;</li>
+    <li>aucune adresse de page visitée ;</li>
+    <li>aucun contenu de page, texte, image ou capture d'écran ;</li>
+    <li>aucune donnée de frappe, aucun cookie, aucun identifiant publicitaire.</li>
+  </ul>
+
+  <h2>Captures d'écran et rapport de bug</h2>
+  <p>Le Scan et le rapport de bug sont déclenchés uniquement par vous. La capture
+  et le texte reconnu restent dans le stockage local de l'extension, sur votre
+  machine, et peuvent être supprimés à tout moment depuis la page de rapport.</p>
+
+  <h2>Vos droits</h2>
+  <p>Aucune donnée n'étant collectée, il n'y a rien à consulter, corriger ou
+  supprimer côté serveur. Désinstaller l'extension efface tout le stockage local.</p>
+
+  <h2>Contact</h2>
+  <p>Pour toute question : <a href="https://github.com/fingersmooth/uniconv/issues">github.com/fingersmooth/uniconv/issues</a></p>
+</main>
+</body>
+</html>
