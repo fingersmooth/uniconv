@@ -97,6 +97,13 @@ check(!chromium.browser_specific_settings && !safari.browser_specific_settings,
 check(chromium.background.service_worker === 'src/background.js' &&
   safari.background.service_worker === 'src/background.js',
   'Chromium et Safari : service worker identique');
+
+check(!firefox.background.service_worker &&
+  Array.isArray(firefox.background.scripts),
+  'Firefox : aucun service_worker dans le paquet XPI');
+
+check(Number(firefox.browser_specific_settings.gecko.strict_min_version) >= 142,
+  'Firefox : version minimale compatible data_collection_permissions');
 check(Boolean(safari.options_ui) && safari.options_ui.open_in_tab === undefined,
   'Safari : options_ui sans « open_in_tab »');
 

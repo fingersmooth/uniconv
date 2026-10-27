@@ -7,7 +7,7 @@ qui affiche, au survol,
 la conversion d'un montant, d'une unité de mesure ou d'une heure avec fuseau.
 Tout reste en local : aucune donnée de navigation n'est envoyée.
 
-- **Version : 2.9.8**
+- **Version : 2.9.9**
 - Manifest V3, JavaScript pur, **sans build ni dépendance**.
 - Moteur OCR **embarqué** (Tesseract, 8,2 Mo) : la lecture d'image fonctionne
   hors ligne.

@@ -31,7 +31,7 @@
 'use strict';
 
 const LOG_PREFIX = '[UniConv]';
-const UNICONV_VERSION = '2.9.8';
+const UNICONV_VERSION = '2.9.9';
 
 /** Langues couvertes par l'interface (les six langues officielles de l'ONU). */
 const UNICONV_LANGUAGES = ['fr', 'en', 'es', 'ru', 'zh', 'ar'];

@@ -60,5 +60,18 @@ visitée.
 
 ## Fichiers à joindre
 
-- `dist/uniconv-2.9.8.xpi`
+- `dist/uniconv-2.9.9.xpi`
 - Captures 1280×800 (voir `docs/PUBLICATION.md`, section Visuels)
+
+
+## Avertissements AMO attendus
+
+Les avertissements **« The Function constructor is eval »** et
+**« no-unsanitized »** proviennent uniquement de Tesseract.js 5.1.1, bibliothèque
+OCR **vendorisée** dans `src/vendor/tesseract/`. UniConv n'évalue aucun code
+distant et n'utilise ni `eval` ni `new Function` dans son propre code.
+
+Le paquet Firefox 2.9.9 :
+
+- ne contient **pas** `background.service_worker` ;
+- cible Firefox **142+**, compatible `data_collection_permissions`.

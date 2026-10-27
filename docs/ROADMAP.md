@@ -825,7 +825,7 @@ nouvelle fonctionnalité.
 | 9septies | Livrée | 16/10 | Trois défauts signalés : (1) la bulle réaffichait le prix lu au lieu de le convertir — la conversion devient la **ligne principale**, la raison d'un échec est affichée et un second essai est tenté ; (2) l'onglet moteur montrait une image et un texte sans rapport (le texte n'était mis à jour que par le bouton de test) — toute lecture synchronise désormais l'aperçu et le texte ; (3) le faux DOM des tests ne savait pas faire `querySelector`, ce qui masquait la mise à jour de la bulle. 3 tests ajoutés (conversion en ligne principale, échec expliqué). |# Reprise de la session — où on en est
 | 9octies | Livrée | 16/10 | **Format `679€99` pris en charge** (centimes en exposant, mis à plat). Ce n'était pas un défaut d'OCR : le texte était parfaitement lu, mais le détecteur refusait le montant — « 679 € » était rejeté car suivi de `99`, et « €99 » car précédé de `679`. Un troisième motif (nombre + symbole + centimes) comble le trou, et bénéficie aussi au texte des pages, pas seulement à l'OCR. 4 cas ajoutés aux données de test + 3 lignes visibles dans `formats.html`. |
 | 9nonies | Livrée | 16/10 | **L'OCR n'est plus isolé** : la bulle d'un résultat OCR emprunte désormais le MÊME chemin qu'un clic sur un montant — conversion en ligne principale, ligne du taux, **menu de devises** (recherche, drapeaux, épinglage) et poignée de redimensionnement. Le texte reconnu part dans la console (et dans l'onglet moteur) pour ne pas encombrer la bulle. Le montant reconnu ayant la même forme qu'un montant détecté, aucun code n'a été dupliqué : tout ajout futur au menu profite à l'OCR. 2 tests ajoutés (menu présent, devises listées). 
-| **Version actuelle de l'extension : 2.9.8**
+| **Version actuelle de l'extension : 2.9.9**
 | 10 | **Arrêtée le 24/10** (non retenue) | 16/10 | **OCR automatique** : score de pertinence (mots de prix, symbole monétaire, taille, prix en texte à proximité, bouton d'achat), analyse au **survol prolongé de 800 ms**, **budget de 5 images par page** (réglable 1–20), **cache** par image, une seule analyse à la fois, arrêt si l'onglet est en arrière-plan, **désactivé par défaut**. Pastille « OCR… » sur l'image pendant la lecture, statistiques dans le popup (analysées / ignorées / budget / temps moyen), seuil et budget dans les réglages. `test/ocr-auto.html` : 50 images dont 6 candidates, **auto-diagnostique** (tableau de bord, repli mémoire des images illisibles, rapport copiable). 21 tests dédiés dans `dynamic-tests` + 37 dans `page-tests`. **Corrections 0.23.0** (itération finalement arrêtée) : plus de pastille photographiée, verrou d'analyse couvrant toute la lecture (+ garde-fou 30 s), reprise de l'image survolée pendant une lecture, compteur d'ignorées non gonflé, texte lu affiché en console, marqueur de code `data-unic-build` contre l'extension fantôme, **cache par vignette** (et non par fichier image), **bulle de l'OCR automatique non bloquante** (survoler une autre image relance la lecture sans clic). |
 | 11 | **Validée le 24/10** | 24/10 | **Fuseaux horaires** : 33 cas de formats d'heure (24 h, `14h30`, 12 h AM/PM, ISO 8601, RFC 2822), ~50 abréviations (choix des ambiguïtés documenté), noms IANA (heure d'été comprise), formules « heure de Paris » / « Pacific Time », décalages à 5 h 45, **132 villes** avec menu au clic (recherche, drapeaux, épinglage, « ma position »), décalage et changement de jour affichés. Module **pur** extrait et testé hors navigateur (`timezone-tests`, 80 vérifications), page `test/fuseaux.html` (33 cas + 15 pièges), réglages (activation, ville, format 12/24 h). |
 | 12 | Livrée, en attente du test visuel | 24/10 | **Polissage et publication** : nettoyage (`styles.css` supprimé), accessibilité (Échap ferme la bulle, focus clavier visible, `aria-label`/`aria-pressed`/`lang`, contrastes recalculés et corrigés, poignée réglable aux flèches), mesures de performance (3,8 µs par ligne, 400 Ko en 253 ms), **archives reproductibles** `dist/uniconv-1.0.0.xpi` et `-chrome.zip` (manifeste Chrome adapté, service worker), `README.md`, politique de confidentialité, guide de publication AMO/Chrome, 2 nouvelles suites (`accessibility-tests`, `release-tests`). |
@@ -879,7 +879,7 @@ validé et testé :
 |---|---|
 | Syntaxe de `content.js`, `background.js`, `popup.js`, `options.js` | OK |
 | Manifeste JSON, fichiers référencés, page d'options, page OCR | Valides, aucun manquant |
-| Numéros de version | Cohérents en 2.9.8 partout |
+| Numéros de version | Cohérents en 2.9.9 partout |
 | Empaquetage | `.xpi` (Firefox) + `-chromium.zip` (Chrome/Edge/Brave/Opera/Vivaldi) + `-safari.zip` + dossier Safari, contenu vérifié |
 | Refonte visuelle | **En cours** — brief livré (`docs/DESIGN-SPEC.md`, `docs/design/`), maquettes externes attendues |
 | `node tools/run-tests.mjs` — moteur de détection et fourchettes | 134 / 134 |
@@ -896,10 +896,10 @@ validé et testé :
 | `node tools/timezone-tests.mjs` — fuseaux horaires (GMT, formats, conversion) | 91 / 91 |
 | `node tools/accessibility-tests.mjs` — ARIA, clavier, contrastes | 28 / 28 |
 | `node tools/release-tests.mjs` — empaquetage, icônes, performance, documents | 46 / 46 |
-| `node tools/compat-tests.mjs` — manifestes et API des trois navigateurs | 40 / 40 |
+| `node tools/compat-tests.mjs` — manifestes et API des trois navigateurs | 42 / 42 |
 | `node tools/popup-tests.mjs` — popup, convertisseur, tutoriel, langues | 47 / 47 |
 
-**Total : 979 vérifications, 0 échec (16 suites).**
+**Total : 981 vérifications, 0 échec (16 suites).**
 
 ## Ce qui fonctionne déjà (constaté dans Firefox)
 

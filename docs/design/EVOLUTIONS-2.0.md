@@ -5,7 +5,7 @@ restent la référence pour la **bulle**, les **menus** et la **page de réglage
 de base. Ce fichier ajoute les trois écrans apparus depuis la version 1.0 :
 le **popup 2.0**, le **tutoriel** et le **convertisseur autonome**.
 
-Version produit : **2.9.8** — 26 octobre 2026.
+Version produit : **2.9.9** — 26 octobre 2026.
 
 ---
 

@@ -16,7 +16,7 @@ projet dans une nouvelle session, sans rien réexpliquer.
   **validée** le 24/10. **L'itération 10 (OCR automatique) a été arrêtée** sur
   décision de l'utilisateur : la lecture manuelle (bouton **Scan**) est plus
   précise et plus économe. Le code reste en place, désactivé et replié.
-- **État des tests automatiques : 979 vérifications, 0 échec, 16 suites** (§ 8)
+- **État des tests automatiques : 981 vérifications, 0 échec, 16 suites** (§ 8)
 - **Dossier :** `<dossier du projet>` (87 fichiers hors
   archives, ~9 Mo, dont 8,2 Mo de moteur OCR ; archives dans `dist/`)
 
@@ -274,7 +274,7 @@ Fuseaux : module pur entre les marqueurs `>>> DEBUT MODULE FUSEAUX` et
 
 ---
 
-## 8. Les 16 suites de tests (979 vérifications)
+## 8. Les 16 suites de tests (981 vérifications)
 
 | Suite | Nb | Ce qu'elle vérifie |
 |---|---|---|
@@ -292,7 +292,7 @@ Fuseaux : module pur entre les marqueurs `>>> DEBUT MODULE FUSEAUX` et
 | `timezone-tests` | 91 | module de fuseaux extrait et rejoué : 33 cas (dont heures d'été et décalage à 5 h 45), 15 pièges, 132 fuseaux IANA validés, formatage 12/24 h, Réglages |
 | `accessibility-tests` | 28 | ARIA de la bulle et des menus, `lang`, libellés, `aria-pressed`, focus visible, **contrastes calculés** (WCAG), Échap, poignée aux flèches, `prefers-reduced-motion` |
 | `release-tests` | 46 | archives Firefox/Chromium/Safari (contenu, manifestes adaptés), icônes PNG, fichiers morts, README/confidentialité/publication, **performances mesurées** |
-| `compat-tests` | 40 | trois manifestes (MV3, permissions, service worker), **liste blanche des API**, garde-fous (capture), documentation des navigateurs |
+| `compat-tests` | 42 | trois manifestes (MV3, permissions, service worker), **liste blanche des API**, garde-fous (capture), documentation des navigateurs |
 | `popup-tests` | 47 | bouton **Scan** dans l'en-tête, convertisseur, table d'unités identique à `content.js`, conversions réelles, page autonome, commandes, tutoriel, case OCR, absence de l'ancien raccourci |
 
 **Faux navigateur** : construit à la main dans `dynamic-tests` et `smoke-test`
@@ -1245,7 +1245,7 @@ emoji.
 > `<dossier du projet>`. Lis d'abord
 > `docs/REPRISE-DE-SESSION.md` : il contient l'historique complet, l'architecture,
 > les décisions, les bugs corrigés et l'état exact du dernier chantier.
-> Version 2.9.8, 979 vérifications qui passent en 16 suites
+> Version 2.9.9, 981 vérifications qui passent en 16 suites
 > (`for f in run-tests smoke-test background-test audit-tests units-tests
 > currency-meta-tests currency-search-tests dynamic-tests false-positive-tests
 > options-tests ocr-tests timezone-tests accessibility-tests

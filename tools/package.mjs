@@ -85,6 +85,18 @@ export function referencedPaths(manifest) {
 }
 
 /**
+ * Manifeste pour Firefox : page d'evenement uniquement.
+ *
+ * Le manifeste source contient aussi `service_worker` pour Chromium, mais
+ * Firefox ignore cette propriete et AMO la signale comme avertissement.
+ */
+export function firefoxManifest(manifest) {
+  const copy = JSON.parse(JSON.stringify(manifest));
+  copy.background = { scripts: ['src/background.js'] };
+  return copy;
+}
+
+/**
  * Manifeste pour Chromium (Chrome, Edge, Brave, Opera, Vivaldi).
  * Service worker obligatoire en MV3, bloc Firefox interdit.
  */
@@ -177,9 +189,14 @@ export function buildPackages() {
   rmSync(DIST, { recursive: true, force: true });
   mkdirSync(DIST, { recursive: true });
 
-  // 3. Firefox : le dossier tel quel (background.scripts + bloc gecko).
+  // 3. Firefox : manifeste adapte, sans `service_worker` (ignore par Firefox).
   const firefox = join(DIST, `uniconv-${version}.xpi`);
-  execFileSync('zip', ['-r', '-q', firefox, ...RUNTIME_ENTRIES], { cwd: ROOT });
+  buildVariant(
+    firefoxManifest(manifest),
+    firefox,
+    join(DIST, 'firefox'),
+    false
+  );
 
   // 4. Chromium et Safari : copies avec manifeste adapte.
   const chromium = join(DIST, `uniconv-${version}-chromium.zip`);
@@ -196,7 +213,7 @@ export function buildPackages() {
 
   // 5. Verification : manifeste a la racine, fichiers cites presents.
   for (const [archive, variant] of [
-    [firefox, manifest],
+    [firefox, firefoxManifest(manifest)],
     [chromium, chromiumManifest(manifest)],
     [safari, safariManifest(manifest)]
   ]) {
