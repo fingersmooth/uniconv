@@ -157,7 +157,233 @@ function currencyDisplayNames() {
   return currencyNames || null;
 }
 
-/** Remplit les listes de devises (sans perdre la selection). */
+/**
+ * Devises principales (ordre d'importance) et épinglées, pour la recherche.
+ * Les codes restent stockés dans un <input hidden> pour le reste du code.
+ */
+const CONVERTER_TOP_CURRENCIES = ['USD', 'EUR', 'JPY', 'GBP', 'CNY'];
+const converterPinned = new Set();
+
+/** Nom lisible d'une devise. */
+function converterCurrencyName(code) {
+  const names = currencyDisplayNames();
+  if (!names) {
+    return code;
+  }
+  try {
+    return names.of(code) || code;
+  } catch (error) {
+    return code;
+  }
+}
+
+function converterLabel(code) {
+  return `${code} — ${converterCurrencyName(code)}`;
+}
+
+/** Vrai si le code correspond à la recherche (code, nom, pays). */
+function converterMatches(code, query) {
+  if (!query) {
+    return true;
+  }
+  const haystack = [
+    code,
+    converterCurrencyName(code)
+  ].join(' ').toLowerCase();
+  return haystack.indexOf(query) !== -1;
+}
+
+/**
+ * Construit (ou reconstruit) le menu d'une combobox de devise.
+ *
+ * @param {'from'|'to'} kind
+ */
+function renderConverterCombo(kind) {
+  const list = document.getElementById(`conv-${kind}-list`);
+  if (!list) {
+    return;
+  }
+
+  const search = document.getElementById(`conv-${kind}-search`);
+  const query = String(search ? search.value : '').trim().toLowerCase();
+  const all = converterCurrencyCodes.length > 0
+    ? converterCurrencyCodes
+    : ['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'CNY'];
+
+  const filtered = all.filter((code) => converterMatches(code, query));
+  const pinned = filtered.filter((code) => converterPinned.has(code));
+  const top = CONVERTER_TOP_CURRENCIES.filter(
+    (code) => filtered.indexOf(code) !== -1 && !converterPinned.has(code)
+  );
+  const others = filtered
+    .filter((code) => !converterPinned.has(code) &&
+      CONVERTER_TOP_CURRENCIES.indexOf(code) === -1)
+    .sort();
+
+  const selected = document.getElementById(`conv-${kind}`)
+    ? document.getElementById(`conv-${kind}`).value
+    : '';
+
+  list.textContent = '';
+  if (filtered.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'converter-combo-item';
+    empty.textContent = 'Aucun résultat';
+    list.appendChild(empty);
+    return;
+  }
+
+  const sections = [
+    { title: 'Épinglées', items: pinned },
+    { title: 'Principales', items: top },
+    { title: 'Autres', items: others }
+  ];
+
+  for (const section of sections) {
+    if (section.items.length === 0) {
+      continue;
+    }
+    const header = document.createElement('div');
+    header.className = 'converter-combo-section';
+    header.textContent = section.title;
+    list.appendChild(header);
+
+    for (const code of section.items) {
+      const row = document.createElement('div');
+      row.className = 'converter-combo-row';
+
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'converter-combo-item' + (code === selected ? ' selected' : '');
+      item.setAttribute('data-code', code);
+
+      const flag = document.createElement('span');
+      flag.className = 'converter-combo-flag';
+      flag.textContent = '';
+
+      const name = document.createElement('span');
+      name.className = 'converter-combo-name';
+      name.textContent = converterLabel(code);
+
+      item.appendChild(flag);
+      item.appendChild(name);
+      item.addEventListener('click', function () {
+        selectConverterCurrency(kind, code);
+      });
+      row.appendChild(item);
+
+      const pin = document.createElement('button');
+      pin.type = 'button';
+      pin.className = 'converter-combo-pin' +
+        (converterPinned.has(code) ? ' pinned' : '');
+      pin.textContent = '📌';
+      pin.title = converterPinned.has(code)
+        ? 'Retirer des épinglées'
+        : 'Épingler cette devise';
+      pin.setAttribute('aria-label', pin.title);
+      pin.setAttribute('aria-pressed', converterPinned.has(code) ? 'true' : 'false');
+      pin.addEventListener('click', function (event) {
+        if (event && event.stopPropagation) event.stopPropagation();
+        toggleConverterPin(code);
+        renderConverterCombo(kind);
+      });
+      row.appendChild(pin);
+
+      list.appendChild(row);
+    }
+  }
+}
+
+/** Applique un choix de devise et met à jour la conversion. */
+function selectConverterCurrency(kind, code) {
+  const hidden = document.getElementById(`conv-${kind}`);
+  const field = document.getElementById(`conv-${kind}-field`);
+  const menu = document.getElementById(`conv-${kind}-menu`);
+  if (!hidden || !field) {
+    return;
+  }
+  hidden.value = code;
+  field.textContent = converterLabel(code);
+  if (menu) {
+    menu.hidden = true;
+  }
+  field.setAttribute('aria-expanded', 'false');
+  refreshCurrencyConversion();
+}
+
+function closeConverterCombos(except) {
+  for (const kind of ['from', 'to']) {
+    if (kind === except) {
+      continue;
+    }
+    const menu = document.getElementById(`conv-${kind}-menu`);
+    const field = document.getElementById(`conv-${kind}-field`);
+    if (menu) {
+      menu.hidden = true;
+    }
+    if (field) {
+      field.setAttribute('aria-expanded', 'false');
+    }
+  }
+}
+
+function openConverterCombo(kind) {
+  const menu = document.getElementById(`conv-${kind}-menu`);
+  const field = document.getElementById(`conv-${kind}-field`);
+  const search = document.getElementById(`conv-${kind}-search`);
+  if (!menu || !field) {
+    return;
+  }
+  closeConverterCombos(kind);
+  menu.hidden = false;
+  field.setAttribute('aria-expanded', 'true');
+  if (search) {
+    search.value = '';
+  }
+  renderConverterCombo(kind);
+  if (search && typeof search.focus === 'function') {
+    search.focus();
+  }
+}
+
+function toggleConverterPin(code) {
+  if (converterPinned.has(code)) {
+    converterPinned.delete(code);
+  } else {
+    converterPinned.add(code);
+  }
+  try {
+    chrome.storage.local.set({ 'uniconv.pinnedCurrencies': Array.from(converterPinned) });
+  } catch (error) {
+    // Stockage indisponible : l'épinglage reste en mémoire.
+  }
+}
+
+function loadConverterPins() {
+  try {
+    chrome.storage.local.get('uniconv.pinnedCurrencies', function (result) {
+      if (chrome.runtime.lastError) {
+        return;
+      }
+      const value = result && result['uniconv.pinnedCurrencies'];
+      if (!Array.isArray(value)) {
+        return;
+      }
+      converterPinned.clear();
+      for (const code of value) {
+        if (/^[A-Z]{3}$/.test(String(code))) {
+          converterPinned.add(String(code));
+        }
+      }
+      renderConverterCombo('from');
+      renderConverterCombo('to');
+    });
+  } catch (error) {
+    // Stockage indisponible.
+  }
+}
+
+/** Remplit les combobox de devises (sans perdre la sélection). */
 function populateCurrencySelects(codes) {
   const from = document.getElementById('conv-from');
   const to = document.getElementById('conv-to');
@@ -175,35 +401,21 @@ function populateCurrencySelects(codes) {
   converterCurrencyCodes = list;
   const previousFrom = from.value;
   const previousTo = to.value;
-  const names = currencyDisplayNames();
-
-  from.textContent = '';
-  to.textContent = '';
-
-  for (const code of list) {
-    let name = code;
-    if (names) {
-      try {
-        name = names.of(code) || code;
-      } catch (error) {
-        name = code;
-      }
-    }
-    const label = `${code} \u2014 ${name}`;
-
-    const fromOption = document.createElement('option');
-    fromOption.value = code;
-    fromOption.textContent = label;
-    from.appendChild(fromOption);
-
-    const toOption = document.createElement('option');
-    toOption.value = code;
-    toOption.textContent = label;
-    to.appendChild(toOption);
-  }
 
   from.value = list.includes(previousFrom) ? previousFrom : (list.includes('EUR') ? 'EUR' : list[0]);
   to.value = list.includes(previousTo) ? previousTo : (list.includes('USD') ? 'USD' : list[0]);
+
+  const fromField = document.getElementById('conv-from-field');
+  const toField = document.getElementById('conv-to-field');
+  if (fromField) {
+    fromField.textContent = converterLabel(from.value);
+  }
+  if (toField) {
+    toField.textContent = converterLabel(to.value);
+  }
+
+  renderConverterCombo('from');
+  renderConverterCombo('to');
 }
 
 /** Groupe d'unites par identifiant. */
@@ -429,6 +641,9 @@ function setConverterTab(tab) {
   if (unitPane) {
     unitPane.hidden = isCurrency;
   }
+  if (!isCurrency) {
+    closeConverterCombos();
+  }
 }
 
 /** Installe le convertisseur (appele au demarrage). */
@@ -455,19 +670,55 @@ function initConverter() {
   }
 
   const convAmount = document.getElementById('conv-amount');
-  const convFrom = document.getElementById('conv-from');
-  const convTo = document.getElementById('conv-to');
   const convSwap = document.getElementById('conv-swap');
 
   if (convAmount) {
     convAmount.addEventListener('input', scheduleCurrencyConversion);
   }
-  if (convFrom) {
-    convFrom.addEventListener('change', refreshCurrencyConversion);
+
+  // Combobox de devise : champ cliquable, recherche, choix, épingle.
+  for (const kind of ['from', 'to']) {
+    const field = document.getElementById(`conv-${kind}-field`);
+    const search = document.getElementById(`conv-${kind}-search`);
+
+    if (field) {
+      field.addEventListener('click', function (event) {
+        if (event && event.stopPropagation) event.stopPropagation();
+        const menu = document.getElementById(`conv-${kind}-menu`);
+        if (menu && menu.hidden) {
+          openConverterCombo(kind);
+        } else {
+          closeConverterCombos();
+        }
+      });
+    }
+    if (search) {
+      search.addEventListener('input', function () {
+        renderConverterCombo(kind);
+      });
+      search.addEventListener('keydown', function (event) {
+        if (event && (event.key === 'Escape' || event.key === 'Esc')) {
+          event.preventDefault();
+          closeConverterCombos();
+        }
+      });
+    }
   }
-  if (convTo) {
-    convTo.addEventListener('change', refreshCurrencyConversion);
-  }
+
+  document.addEventListener('click', function (event) {
+    const target = event && event.target;
+    for (const kind of ['from', 'to']) {
+      const combo = document.getElementById(`conv-${kind}-combo`);
+      if (combo && target && typeof combo.contains === 'function' &&
+          combo.contains(target)) {
+        return;
+      }
+    }
+    closeConverterCombos();
+  });
+
+  loadConverterPins();
+
   if (convSwap) {
     convSwap.addEventListener('click', function () {
       const from = document.getElementById('conv-from');
@@ -478,6 +729,10 @@ function initConverter() {
       const previous = from.value;
       from.value = to.value;
       to.value = previous;
+      const fromField = document.getElementById('conv-from-field');
+      const toField = document.getElementById('conv-to-field');
+      if (fromField) fromField.textContent = converterLabel(from.value);
+      if (toField) toField.textContent = converterLabel(to.value);
       refreshCurrencyConversion();
     });
   }

@@ -1,4 +1,4 @@
-# UniConv 2.9.9 — source de publication AMO
+# UniConv 2.9.10 — source de publication AMO
 
 ## Résumé
 
@@ -30,15 +30,15 @@ node tools/package.mjs
 Résultat attendu :
 
 ```text
-dist/uniconv-2.9.9.xpi
-dist/uniconv-2.9.9-chromium.zip
-dist/uniconv-2.9.9-safari.zip
+dist/uniconv-2.9.10.xpi
+dist/uniconv-2.9.10-chromium.zip
+dist/uniconv-2.9.10-safari.zip
 ```
 
 Le fichier à comparer à la soumission AMO est :
 
 ```text
-dist/uniconv-2.9.9.xpi
+dist/uniconv-2.9.10.xpi
 ```
 
 Aucune autre étape technique n'est nécessaire.

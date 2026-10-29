@@ -23,7 +23,7 @@
 
 'use strict';
 
-const UNICONV_VERSION = '2.9.9';
+const UNICONV_VERSION = '2.9.10';
 
 /** Promesse de creation du worker (une seule instance, reutilisee). */
 let workerPromise = null;

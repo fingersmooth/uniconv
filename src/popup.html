@@ -521,6 +521,117 @@
 
     .converter-row .converter-select { flex: 1; min-width: 0; }
 
+    /* Combobox de devise : champ cliquable + menu avec recherche. */
+    .converter-combo {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+    .converter-combo-field {
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .converter-combo-field::after {
+      content: ' \25BE';
+      font-size: 9px;
+      opacity: 0.7;
+    }
+    .converter-combo-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 40;
+      padding: 6px;
+      border: 2px solid var(--pixel-ink, #071018);
+      border-radius: 3px;
+      background: #ffffff;
+      box-shadow: 4px 4px 0 var(--pixel-ink, #071018);
+    }
+    .converter-combo-menu[hidden] { display: none; }
+    .converter-combo-search {
+      width: 100%;
+      padding: 4px 6px;
+      border: 2px solid #cbd5e1;
+      border-radius: 2px;
+      font: inherit;
+      font-size: 11.5px;
+    }
+    .converter-combo-list {
+      max-height: 190px;
+      overflow-y: auto;
+      margin-top: 5px;
+    }
+    .converter-combo-section {
+      margin-top: 4px;
+      padding: 5px 6px 3px;
+      border-top: 1px solid #94a3b8;
+      background: #f1f5f9;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #334155;
+    }
+    .converter-combo-row {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .converter-combo-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 0;
+      padding: 5px 6px;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      color: #111827;
+      font: inherit;
+      font-size: 11.5px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .converter-combo-item:hover,
+    .converter-combo-item.selected {
+      background: #eef3ff;
+      color: var(--unicolor-accent);
+    }
+    .converter-combo-flag {
+      flex: none;
+      width: 18px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .converter-combo-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .converter-combo-pin {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      font-size: 11px;
+      cursor: pointer;
+      filter: grayscale(1);
+      opacity: 0.35;
+    }
+    .converter-combo-pin:hover { opacity: 0.75; }
+    .converter-combo-pin.pinned { filter: none; opacity: 1; }
+
     .converter-swap {
       flex: none;
       width: 26px;
@@ -672,10 +783,32 @@
       <input class="converter-input" id="conv-amount" type="number"
              inputmode="decimal" step="any" min="0" value="1">
       <div class="converter-row">
-        <select class="converter-select" id="conv-from" aria-label="Devise de depart"></select>
+        <div class="converter-combo" id="conv-from-combo">
+          <button type="button" class="converter-select converter-combo-field" id="conv-from-field"
+                  aria-haspopup="listbox" aria-expanded="false"
+                  aria-label="Devise de départ">EUR</button>
+          <div class="converter-combo-menu" id="conv-from-menu" hidden>
+            <input type="search" class="converter-combo-search" id="conv-from-search"
+                   placeholder="Rechercher une devise…" aria-label="Rechercher la devise de départ">
+            <div class="converter-combo-list" id="conv-from-list" role="listbox"
+                 aria-label="Devises de départ"></div>
+          </div>
+          <input type="hidden" id="conv-from" value="EUR">
+        </div>
         <button type="button" class="converter-swap" id="conv-swap"
                 title="Inverser les devises" aria-label="Inverser les devises">&#8644;</button>
-        <select class="converter-select" id="conv-to" aria-label="Devise d'arrivee"></select>
+        <div class="converter-combo" id="conv-to-combo">
+          <button type="button" class="converter-select converter-combo-field" id="conv-to-field"
+                  aria-haspopup="listbox" aria-expanded="false"
+                  aria-label="Devise d'arrivée">USD</button>
+          <div class="converter-combo-menu" id="conv-to-menu" hidden>
+            <input type="search" class="converter-combo-search" id="conv-to-search"
+                   placeholder="Rechercher une devise…" aria-label="Rechercher la devise d'arrivée">
+            <div class="converter-combo-list" id="conv-to-list" role="listbox"
+                 aria-label="Devises d'arrivée"></div>
+          </div>
+          <input type="hidden" id="conv-to" value="USD">
+        </div>
       </div>
       <output class="converter-result" id="conv-result"
               for="conv-amount conv-from conv-to">&#8212;</output>

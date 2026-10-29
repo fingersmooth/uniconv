@@ -60,7 +60,7 @@ visitée.
 
 ## Fichiers à joindre
 
-- `dist/uniconv-2.9.9.xpi`
+- `dist/uniconv-2.9.10.xpi`
 - Captures 1280×800 (voir `docs/PUBLICATION.md`, section Visuels)
 
 
@@ -71,7 +71,7 @@ Les avertissements **« The Function constructor is eval »** et
 OCR **vendorisée** dans `src/vendor/tesseract/`. UniConv n'évalue aucun code
 distant et n'utilise ni `eval` ni `new Function` dans son propre code.
 
-Le paquet Firefox 2.9.9 :
+Le paquet Firefox 2.9.10 :
 
 - ne contient **pas** `background.service_worker` ;
 - cible Firefox **142+**, compatible `data_collection_permissions`.

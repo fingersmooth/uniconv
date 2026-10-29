@@ -1,7 +1,7 @@
 # UniConv — audit de sécurité
 
 Date : 2026-10-27  
-Version auditée : **2.9.9**  
+Version auditée : **2.9.10**  
 Périmètre : manifeste, arrière-plan, content script, moteur OCR, popup,
 réglages, rapport de bug, stockage local et appels réseau.
 

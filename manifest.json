@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "UniConv",
-  "version": "2.9.9",
+  "version": "2.9.10",
   "description": "Affiche la valeur convertie des montants en devises et des unites de mesure, au survol, directement dans la page.",
   "browser_specific_settings": {
     "gecko": {

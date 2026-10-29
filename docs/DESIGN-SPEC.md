@@ -1,7 +1,7 @@
 # UniConv — Cahier de conception visuelle
 
 **Version du document : 2.0 — 26 octobre 2026**
-**Produit : extension navigateur UniConv 2.9.9 (Firefox / Chrome / Safari, Manifest V3)**
+**Produit : extension navigateur UniConv 2.9.10 (Firefox / Chrome / Safari, Manifest V3)**
 
 ---
 

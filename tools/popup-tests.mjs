@@ -493,6 +493,23 @@ check(
 );
 
 check(
+  /id="conv-from-field"/.test(html) &&
+    /id="conv-to-field"/.test(html) &&
+    /id="conv-from-search"/.test(html) &&
+    /id="conv-to-search"/.test(html) &&
+    /id="conv-from-list"/.test(html) &&
+    /id="conv-to-list"/.test(html),
+  'le convertisseur propose deux combobox de devise avec recherche'
+);
+
+check(
+  /function renderConverterCombo/.test(readFileSync(join(ROOT, 'src', 'converter.js'), 'utf8')) &&
+    /function openConverterCombo/.test(readFileSync(join(ROOT, 'src', 'converter.js'), 'utf8')) &&
+    /CONVERTER_TOP_CURRENCIES/.test(readFileSync(join(ROOT, 'src', 'converter.js'), 'utf8')),
+  'les combobox ont une recherche, des sections et un épinglage'
+);
+
+check(
   /class="donation-footer"/.test(html) &&
     /href="https:\/\/ko-fi\.com\/fingersmooth"/.test(html) &&
     /target="_blank"/.test(html) &&

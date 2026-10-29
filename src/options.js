@@ -24,7 +24,7 @@
 'use strict';
 
 /** Version affichee en haut de la page. */
-const UNICONV_VERSION = '2.9.9';
+const UNICONV_VERSION = '2.9.10';
 
 /**
  * Valeurs par defaut de TOUS les reglages.

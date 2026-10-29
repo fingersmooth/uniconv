@@ -3,20 +3,20 @@
 **Document de passation.** Il contient tout ce qu'il faut pour reprendre le
 projet dans une nouvelle session, sans rien réexpliquer.
 
-- **Version de l'extension : 2.9.7** (audit sécurité et durcissement ;
-  validation visuelle en attente)
+- **Version de l'extension : 2.9.10** (combobox de devise dans le
+  convertisseur du popup ; validation visuelle en attente)
 - **Refonte visuelle** : le brief de conception est livré
   (`docs/DESIGN-SPEC.md`, `docs/design/tokens.json`,
   `docs/design/tooltip-anatomy.svg`). L'utilisateur fait appel à un service de
   design externe et renverra un fichier Figma + `tokens.json` + icônes. Voir
   § 12.
-- **Dernier chantier : itération 51 — audit sécurité** (livrée, voir § 9).
-  Itération 50 (Ko-fi) livrée. Itération 12 (polissage, accessibilité, publication) livrée et
+- **Dernier chantier : itération 52 — combobox du convertisseur** (livrée,
+  voir § 9). Itération 51 (audit sécurité) livrée. Itération 12 (polissage, accessibilité, publication) livrée et
   testée. Itération 11 (fuseaux horaires)
   **validée** le 24/10. **L'itération 10 (OCR automatique) a été arrêtée** sur
   décision de l'utilisateur : la lecture manuelle (bouton **Scan**) est plus
   précise et plus économe. Le code reste en place, désactivé et replié.
-- **État des tests automatiques : 981 vérifications, 0 échec, 16 suites** (§ 8)
+- **État des tests automatiques : 983 vérifications, 0 échec, 16 suites** (§ 8)
 - **Dossier :** `<dossier du projet>` (87 fichiers hors
   archives, ~9 Mo, dont 8,2 Mo de moteur OCR ; archives dans `dist/`)
 
@@ -274,7 +274,7 @@ Fuseaux : module pur entre les marqueurs `>>> DEBUT MODULE FUSEAUX` et
 
 ---
 
-## 8. Les 16 suites de tests (981 vérifications)
+## 8. Les 16 suites de tests (983 vérifications)
 
 | Suite | Nb | Ce qu'elle vérifie |
 |---|---|---|
@@ -293,7 +293,7 @@ Fuseaux : module pur entre les marqueurs `>>> DEBUT MODULE FUSEAUX` et
 | `accessibility-tests` | 28 | ARIA de la bulle et des menus, `lang`, libellés, `aria-pressed`, focus visible, **contrastes calculés** (WCAG), Échap, poignée aux flèches, `prefers-reduced-motion` |
 | `release-tests` | 46 | archives Firefox/Chromium/Safari (contenu, manifestes adaptés), icônes PNG, fichiers morts, README/confidentialité/publication, **performances mesurées** |
 | `compat-tests` | 42 | trois manifestes (MV3, permissions, service worker), **liste blanche des API**, garde-fous (capture), documentation des navigateurs |
-| `popup-tests` | 47 | bouton **Scan** dans l'en-tête, convertisseur, table d'unités identique à `content.js`, conversions réelles, page autonome, commandes, tutoriel, case OCR, absence de l'ancien raccourci |
+| `popup-tests` | 49 | bouton **Scan** dans l'en-tête, convertisseur, table d'unités identique à `content.js`, conversions réelles, page autonome, commandes, tutoriel, case OCR, absence de l'ancien raccourci |
 
 **Faux navigateur** : construit à la main dans `dynamic-tests` et `smoke-test`
 (`document`, `createTreeWalker` **respectant sa racine**, `querySelector` par
@@ -1165,6 +1165,18 @@ Audit complet documenté dans `docs/SECURITY.md`.
 6. **Taille de bulle** : valeurs stockées bornées.
 7. **Tests** : `compat-tests` 35 → **40**. **979.**
 
+### Itération 52 — combobox du convertisseur : **livrée, validation en attente**
+
+Le convertisseur du popup utilisait deux `<select>` natifs sans recherche.
+
+1. **Deux combobox** : champ cliquable, menu, recherche par code ou nom.
+2. **Sections** : Épinglées / Principales / Autres (USD, EUR, JPY, GBP, CNY).
+3. **Épinglage partagé** avec la bulle (`uniconv.pinnedCurrencies`).
+4. **Tests** : `popup-tests` 47 → **49**. **983 au total.**
+
+**À vérifier :** ouvrir le popup, cliquer sur la devise de départ ou d'arrivée,
+taper « yuan », choisir CNY, puis inverser.
+
 ### Ce qui relève de l'utilisateur (honnêteté)
 
 L'agent n'a pas de navigateur (Firefox « sans fenêtre » refusé par le bac à
@@ -1245,7 +1257,7 @@ emoji.
 > `<dossier du projet>`. Lis d'abord
 > `docs/REPRISE-DE-SESSION.md` : il contient l'historique complet, l'architecture,
 > les décisions, les bugs corrigés et l'état exact du dernier chantier.
-> Version 2.9.9, 981 vérifications qui passent en 16 suites
+> Version 2.9.10, 981 vérifications qui passent en 16 suites
 > (`for f in run-tests smoke-test background-test audit-tests units-tests
 > currency-meta-tests currency-search-tests dynamic-tests false-positive-tests
 > options-tests ocr-tests timezone-tests accessibility-tests

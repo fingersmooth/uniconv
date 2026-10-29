@@ -1,6 +1,6 @@
 # Publier UniConv — guide pas à pas
 
-**Version 2.9.9.** Ce document décrit la fabrication des archives, la
+**Version 2.9.10.** Ce document décrit la fabrication des archives, la
 soumission à Firefox (AMO) et à Chrome, et le processus de mise à jour.
 
 ---
